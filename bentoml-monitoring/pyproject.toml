@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bentoml-monitoring"
+description = "Monitoring handlers and monitoring plugin management for BentoML"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "Apache-2.0" }
+requires-python = ">=3.7"
+keywords = ["MLOps", "AI", "BentoML", "Model Serving", "Model Deployment"]
+authors = [{ name = "BentoML Team", email = "contact@bentoml.com" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries",
+]
+dynamic = ["version"]
+
+# NOTE: Make sure to add corresponding dependencies for given components here.
+dependencies = [
+    "bentoml==1.0.7",
+]
+
+# NOTE: If requires additional dependencies for specific components, add them here.
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/bentoml/ecosystem/tree/main/bentoml/bentoml-monitoring"
+
+[tool.hatch.version]
+path = "src/bentoml/monitoring/version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bentoml"]
+exclude = ["src/bentoml/monitoring/BUILD"]

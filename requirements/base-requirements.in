@@ -1,0 +1,4 @@
+bentoml[io-image,io-pandas]
+# remove these once we release a new version of bentoml
+opentelemetry-sdk==1.12.0
+cookiecutter

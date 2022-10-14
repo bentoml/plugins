@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+cd "$GIT_ROOT" || exit 1
+
+# Run all rules involving *-requirements.update
+bazel run //:base-requirements.update
+bazel run //:dev-requirements.update
+
+# Run vendor update
+bazel run //:vendor-requirements

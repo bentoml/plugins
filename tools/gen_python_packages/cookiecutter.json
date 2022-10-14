@@ -1,0 +1,10 @@
+{
+    "project_name": "bentoml_monitoring_providers",
+    "project_description": "BentoML Monitoring Providers",
+    "project": "{{ cookiecutter.project_name | lower | replace('_','-') }}",
+    "folder": "{{ cookiecutter.project | splitpart('-',0) }}",
+    "features": "{{ cookiecutter.project | splitpart('-',1) }}",
+    "provider": "{{ cookiecutter.project | splitpart('-',2) }}",
+    "bentoml_version": "{{ cookiecutter.bentoml_version }}",
+    "_extensions": ["bootstrap.splitpart"]
+}

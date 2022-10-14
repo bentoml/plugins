@@ -1,0 +1,3 @@
+venv/
+thirdparty/
+tools/gen_python_packages/

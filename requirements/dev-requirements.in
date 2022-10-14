@@ -1,0 +1,12 @@
+-r base-requirements.in
+hatch
+black==22.3.0
+codecov
+coverage
+isort
+pylint
+pytest-cov
+pytest
+pytest-xdist[psutil]
+pytest-asyncio
+build[virtualenv]
