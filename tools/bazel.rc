@@ -1,4 +1,5 @@
 test --test_output=errors
+# test --test_env=PYTEST_PLUGINS=bentoml.testing.pytest.plugin
 
 # Windows requires these for multi-python support:
 build --enable_runfiles

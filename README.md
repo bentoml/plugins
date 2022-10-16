@@ -13,3 +13,15 @@ To see bootstrap flags use:
 ```bash
 bazel run //tools:bootstrap -- --help
 ```
+
+To run a test:
+
+```bash
+bazel test //path/to/project/tests:package.native
+```
+
+Get all test query:
+
+```bash
+bazel query 'kind(py_test, tests(//...))'
+```

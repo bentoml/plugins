@@ -14,11 +14,11 @@ We will only vendor requirements from [base-requirements.in](./requirements/base
 To update the vendored requirements rules, do:
 
 ```bash
-bazel run //:vendor-requirements
+bazel run //:vendor_requirements
 ```
 
 To update requirements for any `*-requirements.in` changes, do:
 
 ```bash
-bazel run //:<file>-requirements.update
+bazel run //:<file>_requirements.update
 ```

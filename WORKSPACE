@@ -82,7 +82,7 @@ load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
     name = "ecosystem",
     python_interpreter_target = interpreter,
-    requirements_lock = "//requirements:base-requirements.lock.txt",
+    requirements_lock = "//requirements:dev-requirements.lock.txt",
 )
 
 # We are vendoring dependencies requirements from pip_parse

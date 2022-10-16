@@ -1,30 +1,38 @@
+package(default_visibility = ["//visibility:public"])
+
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
 
+# export default pyproject.toml config
+filegroup(
+    name = "pyproject",
+    srcs = ["pyproject.toml"],
+)
+
 buildifier(
     name = "buildifier",
     exclude_patterns = ["./tools/gen_python_packages/**/*"],
-)
-
-compile_pip_requirements(
-    name = "dev-requirements",
-    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
-    requirements_in = "//requirements:dev-requirements.in",
-    requirements_txt = "//requirements:dev-requirements.lock.txt",
-    visibility = ["//visibility:__pkg__"],
 )
 
 # This rule adds a convenient way to update the requirements.txt
 # lockfile based on the requirements.in.
 # Note that this rules will be used to distribute package with bazel.
 compile_pip_requirements(
-    name = "base-requirements",
+    name = "base_requirements",
     extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
     requirements_in = "//requirements:base-requirements.in",
     requirements_txt = "//requirements:base-requirements.lock.txt",
+    visibility = ["//visibility:__pkg__"],
+)
+
+compile_pip_requirements(
+    name = "dev_requirements",
+    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
+    requirements_in = "//requirements:dev-requirements.in",
+    requirements_txt = "//requirements:dev-requirements.lock.txt",
     visibility = ["//visibility:__pkg__"],
 )
 
@@ -32,7 +40,7 @@ compile_pip_requirements(
 # In order to check in a platform-agnostic file, we have to replace that reference with the symbol
 # loaded from our python toolchain.
 genrule(
-    name = "platform-agnostic",
+    name = "platform_agnostic",
     srcs = ["@ecosystem//:requirements.bzl"],
     outs = ["requirements.bzl"],
     cmd = " | ".join([
@@ -45,7 +53,7 @@ genrule(
 )
 
 write_file(
-    name = "gen-update",
+    name = "gen_update",
     out = "update.sh",
     content = [
         "#!/usr/bin/env bash",
@@ -56,17 +64,15 @@ write_file(
 )
 
 sh_binary(
-    name = "vendor-requirements",
+    name = "vendor_requirements",
     srcs = ["update.sh"],
-    data = [":platform-agnostic"],
+    data = [":platform_agnostic"],
 )
 
 # Similarly ensures that the requirements.bzl file is updated based on the requirements.txt lockfile.
 diff_test(
     name = "test-vendor",
-    failure_message = "Please run: bazel run //:vendor-requirements",
+    failure_message = "Please run: bazel run //:vendor_requirements",
     file1 = "//:requirements.bzl",
-    file2 = ":platform-agnostic",
+    file2 = ":platform_agnostic",
 )
-
-# Build releases
