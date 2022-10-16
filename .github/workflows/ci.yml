@@ -1,7 +1,7 @@
-name: Style
+name: CI
 
 concurrency:
-  group: style-check-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
+  group: ci-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 on:
@@ -14,12 +14,9 @@ on:
     paths:
       - "requirements/**"
       - ".github/actions/**"
-      - "monitoring/**"
-      - "bentoml-monitoring/**"
-      - "WORKSPACE"
       - "BUILD.bazel"
       - "pyproject.toml"
-      - ".github/workflows/style.yml"
+      - ".github/workflows/ci.yml"
 
 env:
   LINES: 200
@@ -34,7 +31,8 @@ defaults:
     shell: bash --noprofile --norc -exo pipefail {0}
 
 jobs:
-  format-check:
+  vendor:
+    name: Vendored requirements test
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
     timeout-minutes: 20
@@ -47,21 +45,4 @@ jobs:
         uses: ./.github/actions/setup-repo
       - name: Run format check
         run: |
-          bazel run //:check
-
-  lint:
-    needs: format-check
-    runs-on: ubuntu-latest
-    if: "!github.event.repository.fork" # Don't run on fork repository
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # fetch all tags and branches
-      - name: Setup CI
-        uses: ./.github/actions/setup-repo
-      - name: (pylint) Running lint on monitoring
-        run: pylint monitoring
-      - name: (pylint) Running lint on bentoml-monitoring
-        run: pylint bentoml-monitoring
+          bazel test //:test_vendor

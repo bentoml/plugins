@@ -1,6 +1,7 @@
 workspace(name = "com_github_bentoml_ecosystem")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # We need to setup rules_go for buildifier, as well as future components.
 http_archive(
@@ -91,3 +92,35 @@ pip_parse(
 load("//:requirements.bzl", "install_deps")
 
 install_deps()
+
+git_repository(
+    name = "io_tweag_rules_nixpkgs",
+    commit = "ea5c0bbcc9189473b95f22d3febddb5e56842932",
+    remote = "https://github.com/tweag/rules_nixpkgs.git",
+    shallow_since = "1665056090 +0000",
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+
+rules_nixpkgs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_package")
+
+# Sync with nix/sources.json
+nixpkgs_git_repository(
+    name = "nixpkgs",
+    revision = "2e193264db568a42b342e4b914dc314383a6194c",
+)
+
+# include nixfmt and niv
+nixpkgs_package(
+    name = "niv",
+    attribute_path = "pkgs.niv",
+    repository = "@nixpkgs",
+)
+
+nixpkgs_package(
+    name = "nixfmt",
+    attribute_path = "pkgs.nixfmt",
+    repository = "@nixpkgs",
+)

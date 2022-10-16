@@ -2,7 +2,7 @@ load("@rules_python//python:defs.bzl", "py_test")
 load("//:requirements.bzl", "requirement")
 
 def pytest_suite(name, srcs = None, deps = [], args = [], data = [], **kwargs):
-    """A test suite rule that use pytest to run Python tests.
+    """A test suite macro that use pytest to run Python tests.
 
     This rule will create a target <name>.native, which will glob all 'srcs' that match 'test_<name>.py'.
 
@@ -19,7 +19,7 @@ def pytest_suite(name, srcs = None, deps = [], args = [], data = [], **kwargs):
         srcs = ["//bazel:_pytest_wrapper.py"] + srcs,
         main = "//bazel:_pytest_wrapper.py",
         args = [
-            "-c=$(location //:pyproject)",
+            "--cov-config=$(location //:pyproject)",
         ] + args + ["$(location :%s)" % src for src in srcs],
         python_version = "PY3",
         deps = deps + [
