@@ -20,12 +20,11 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         architecture: ${{ inputs.architecture }}
-    - uses: bazelbuild/setup-bazelisk@v2
-    - name: Mount Bazel cache
-      uses: actions/cache@v3.0.10
-      with:
-        path: ~/.cache/bazel
-        key: bazel
+    - name: Setup bazel
+      shell: bash
+      # NOTE: we have a wrapper that setup bazel locally, so we will run this
+      # to download the binary to the GitHub runner.
+      run: bazel --version
     - name: Get pip cache dir
       id: pip-cache
       shell: bash

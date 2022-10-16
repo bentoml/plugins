@@ -23,4 +23,4 @@ jobs:
             nix/dependencies
           message_suffix: cc @aarnphm
           title_prefix: |
-            chore(deps):
+            chore(deps): updating nixpkgs archive
