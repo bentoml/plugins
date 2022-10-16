@@ -30,7 +30,7 @@ defaults:
     shell: bash --noprofile --norc -exo pipefail {0}
 
 jobs:
-  format:
+  format-check:
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
     timeout-minutes: 20
@@ -41,11 +41,13 @@ jobs:
           fetch-depth: 0 # fetch all tags and branches
       - name: Setup CI
         uses: ./.github/actions/setup-repo
-      - name: Run format
-        run: ./scripts/format
+      - name: Run format check
+        run: |
+          black --check .
+          isort --check .
 
   lint:
-    needs: format
+    needs: format-check
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
     timeout-minutes: 20
@@ -58,5 +60,7 @@ jobs:
         uses: ./.github/actions/setup-repo
       - name: Run lint
         run: ./scripts/lint
-      - name: (pylint) Running lint on folders
-        run: pylint monitoring bentoml-monitoring
+      - name: (pylint) Running lint on monitoring
+        run: pylint monitoring
+      - name: (pylint) Running lint on bentoml-monitoring
+        run: pylint bentoml-monitoring
