@@ -50,6 +50,7 @@ genrule(
         """sed 's#"@python310_.*//:bin/python3"#interpreter#' >$@""",
     ]),
 )
+
 # Similarly ensures that the requirements.bzl file is updated based on the requirements.txt lockfile.
 diff_test(
     name = "test_vendor",
@@ -74,7 +75,7 @@ run_script(
         "black --pyi typings/",
         "isort .",
         # Running nixfmt
-        "find . -name '*.nix' -exec nixfmt {} \\;",
+        "command -v nix >/dev/null 2>&1 && find . -name '*.nix' -exec nixfmt {} \\; || (echo 'Nix is not installed, skipping running nixfmt...'; exit 1)",
     ],
     data = [
         requirement("black"),
@@ -91,7 +92,7 @@ run_script(
         "black --check .",
         "isort --check .",
         # Running nixfmt
-        "nixfmt --check **/*.nix",
+        "command -v nix >/dev/null 2>&1 && nixfmt --check **/*.nix || (echo 'Nix is not installed, skipping running nixfmt...'; exit 1)",
     ],
     data = [
         requirement("black"),
