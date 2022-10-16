@@ -1,0 +1,26 @@
+name: Update niv-managed dependencies
+on:
+  workflow_dispatch:
+  schedule:
+    # run this every day at 12:00AM UTC
+    - cron: "0 0 * * *"
+
+jobs:
+  niv-updater:
+    name: "Create PR for niv-managed dependencies"
+    runs-on: ubuntu-latest
+    steps:
+      - name: niv-updater-action
+        uses: knl/niv-updater-action@v10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          pull_request_base: "main"
+          niv_version: "master"
+          keep_updating: true
+          branch_prefix: "chore/"
+          labels: |
+            nix/dependencies
+          message_suffix: cc @aarnphm
+          title_prefix: |
+            chore(deps):
