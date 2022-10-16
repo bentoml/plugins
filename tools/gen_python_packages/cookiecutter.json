@@ -6,5 +6,7 @@
     "features": "{{ cookiecutter.project | splitpart('-',1) }}",
     "provider": "{{ cookiecutter.project | splitpart('-',2) }}",
     "bentoml_version": "{{ cookiecutter.bentoml_version }}",
-    "_extensions": ["bootstrap.splitpart"]
+    "year": "{% now 'utc', '%Y' %}",
+    "author": "{{ cookiecutter.author }}",
+    "_extensions": ["bootstrap.splitpart","jinja2_time.TimeExtension"]
 }

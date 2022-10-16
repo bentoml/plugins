@@ -71,6 +71,7 @@ if __name__ == "__main__":
         extra_context={
             "project_name": args.package,
             "bentoml_version": bentoml_version(),
+            "author": "Atalaya Tech Inc.",
         },
         overwrite_if_exists=args.parent_dir is None,
     )

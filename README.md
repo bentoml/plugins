@@ -25,3 +25,7 @@ Get all test query:
 ```bash
 bazel query 'kind(py_test, tests(//...))'
 ```
+
+# License
+
+All package under `ecosystem` are distributed under the terms of the [Apache 2.0](./LICENSE) license.

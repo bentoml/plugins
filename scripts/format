@@ -11,4 +11,5 @@ bazel run //:buildifier
 
 # Running python formatter
 black .
+black --pyi typings/
 isort .
