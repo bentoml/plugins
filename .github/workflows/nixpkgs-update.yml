@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     # run this every day at 12:00AM UTC
-    - cron: "0 0 * * *"
+    - cron: "0 0 1/7 * *"
 
 jobs:
   niv-updater:
@@ -21,6 +21,3 @@ jobs:
           branch_prefix: "chore/"
           labels: |
             nix/dependencies
-          message_suffix: cc @aarnphm
-          title_prefix: |
-            chore(deps): updating nixpkgs archive
