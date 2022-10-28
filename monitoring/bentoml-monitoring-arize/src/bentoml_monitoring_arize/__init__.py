@@ -205,27 +205,57 @@ def _map_data(
     """
     if mapping == Mapping.SCORED_CLASSIFICATION:
         prediction_label = (
-            record[fields.prediction_label_columns[0]],
-            record[fields.prediction_score_columns[0]],
+            (
+                record[fields.prediction_label_columns[0]],
+                record[fields.prediction_score_columns[0]],
+            )
+            if fields.prediction_label_columns
+            else None
         )
         actual_label = (
-            record[fields.actual_label_columns[0]],
-            record[fields.actual_score_columns[0]],
+            (
+                record[fields.actual_label_columns[0]],
+                record[fields.actual_score_columns[0]],
+            )
+            if fields.actual_label_columns
+            else None
         )
     elif mapping == Mapping.CLASSIFICATION:
-        prediction_label = record[fields.prediction_label_columns[0]]
-        actual_label = record[fields.actual_label_columns[0]]
+        prediction_label = (
+            record[fields.prediction_label_columns[0]]
+            if fields.prediction_label_columns
+            else None
+        )
+        actual_label = (
+            record[fields.actual_label_columns[0]]
+            if fields.actual_label_columns
+            else None
+        )
     elif mapping == Mapping.REGRESSION:
-        prediction_label = record[
-            (fields.prediction_score_columns + fields.prediction_label_columns)[0]
-        ]
-        actual_label = record[
-            (fields.actual_score_columns + fields.actual_label_columns)[0]
-        ]
+        prediction_label = (
+            record[
+                (fields.prediction_score_columns + fields.prediction_label_columns)[0]
+            ]
+            if fields.prediction_score_columns or fields.prediction_label_columns
+            else None
+        )
+        actual_label = (
+            record[(fields.actual_score_columns + fields.actual_label_columns)[0]]
+            if fields.actual_score_columns or fields.actual_label_columns
+            else None
+        )
     else:
         logger.warning("Mapping not supported. Fallback to regression")
-        prediction_label = record[fields.prediction_score_columns[0]]
-        actual_label = record[fields.actual_score_columns[0]]
+        prediction_label = (
+            record[fields.prediction_score_columns[0]]
+            if fields.prediction_score_columns
+            else None
+        )
+        actual_label = (
+            record[fields.actual_score_columns[0]]
+            if fields.actual_score_columns
+            else None
+        )
     features = {c: record[c] for c in fields.feature_columns}
     embedding_features = {
         c: Embedding(vector=record[c]) for c in fields.embedding_feature_columns  # type: ignore
@@ -353,27 +383,27 @@ class ArizeMonitor(MonitorBase[DataType]):
         while True:
             try:
                 record = {k: v.popleft() for k, v in self._columns.items()}
-                timestamp = record[self.COLUMN_TIME]
-                assert isinstance(timestamp, float)
-                prediction_id = record[self.COLUMN_RID]
-                assert isinstance(prediction_id, int)
-                data_infos = self._data_converter(record)
-                self._client.log(
-                    model_id=self.model_id,
-                    model_type=self.model_type,
-                    environment=self.environment,
-                    model_version=self.model_version,
-                    tags=self.model_tags,
-                    prediction_id=prediction_id,
-                    prediction_timestamp=int(timestamp),
-                    batch_id=None,
-                    prediction_label=data_infos[0],
-                    actual_label=data_infos[1],
-                    features=data_infos[2],
-                    embedding_features=data_infos[3],
-                )
             except IndexError:
                 break
+            timestamp = record[self.COLUMN_TIME]
+            assert isinstance(timestamp, float)
+            prediction_id = record[self.COLUMN_RID]
+            assert isinstance(prediction_id, int)
+            data_infos = self._data_converter(record)
+            self._client.log(
+                model_id=self.model_id,
+                model_type=self.model_type,
+                environment=self.environment,
+                model_version=self.model_version,
+                tags=self.model_tags,
+                prediction_id=prediction_id,
+                prediction_timestamp=int(timestamp),
+                batch_id=None,
+                prediction_label=data_infos[0],
+                actual_label=data_infos[1],
+                features=data_infos[2],
+                embedding_features=data_infos[3],
+            )
 
     def log(
         self,
