@@ -29,7 +29,7 @@ classifiers = [
 dynamic = ["version"]
 
 # NOTE: Make sure to add corresponding dependencies for given components here.
-dependencies = ["bentoml==1.0.7"]
+dependencies = ["bentoml>=1.0.7"]
 
 # NOTE: If requires additional dependencies for specific components, add them here.
 [project.optional-dependencies]
@@ -39,11 +39,11 @@ test = ["pytest"]
 Homepage = "https://github.com/bentoml/ecosystem/tree/main/bentoml/bentoml-monitoring-arize"
 
 [tool.hatch.version]
-path = "src/bentoml/monitoring/arize/version.py"
+path = "src/bentoml_monitoring_arize/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/tests"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/bentoml"]
-exclude = ["src/bentoml/monitoring/arize/BUILD"]
+packages = ["src/bentoml_monitoring_arize"]
+exclude = ["src/bentoml_monitoring_arize/BUILD"]

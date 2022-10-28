@@ -133,7 +133,6 @@ def _is_valid_scored_classification_form(
 
 
 def _is_valid_regression_form(fields: _FieldStats, warn: bool = False) -> bool:
-    assert fields.is_filled
     if fields.prediction_score_columns and not fields.prediction_label_columns:
         if warn and len(fields.prediction_score_columns) > 1:
             logger.warning(
