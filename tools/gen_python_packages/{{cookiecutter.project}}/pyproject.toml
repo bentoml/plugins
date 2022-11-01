@@ -30,10 +30,7 @@ dynamic = ["version"]
 
 # NOTE: Make sure to add corresponding dependencies for given components here.
 dependencies = [
-    "bentoml=={{ cookiecutter.bentoml_version }}",
-    {%- if cookiecutter.provider != "" %}
-    "bentoml-{{ cookiecutter.features }}=={{ cookiecutter.bentoml_version }}",
-    {%- endif %}
+    "bentoml>={{ cookiecutter.bentoml_version }}",
 ]
 
 # NOTE: If requires additional dependencies for specific components, add them here.
