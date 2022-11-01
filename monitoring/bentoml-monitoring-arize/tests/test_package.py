@@ -1,12 +1,16 @@
+# pylint: disable=unused-argument
 from __future__ import annotations
 
 import typing as t
+from typing import TYPE_CHECKING
 
 import pytest
 import arize.api
 
-# from arize.api import Client
 from arize.utils.types import ModelTypes
+
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
 
 
 class Client:
@@ -52,7 +56,7 @@ REQUEST_ID = 214121
 
 
 @pytest.fixture(autouse=True)
-def init_context(monkeypatch):
+def init_context(monkeypatch: MonkeyPatch) -> None:
     from bentoml._internal.context import trace_context
     from bentoml._internal.context import component_context
 
