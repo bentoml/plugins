@@ -4,7 +4,7 @@ load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
-load("//bazel:run_script.bzl", "run_script")
+load("//bazel:run_shell.bzl", "run_shell")
 load("//:requirements.bzl", "requirement")
 
 # export default pyproject.toml config
@@ -59,7 +59,7 @@ diff_test(
     file2 = ":platform_agnostic",
 )
 
-run_script(
+run_shell(
     name = "vendor_requirements",
     content = [
         "cp -fv bazel-bin/requirements.bzl requirements.bzl",
@@ -67,7 +67,7 @@ run_script(
     data = [":platform_agnostic"],
 )
 
-run_script(
+run_shell(
     name = "format",
     content = [
         # Running isort and black
@@ -85,7 +85,7 @@ run_script(
     ],
 )
 
-run_script(
+run_shell(
     name = "check",
     content = [
         # Running isort and black

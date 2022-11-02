@@ -23,5 +23,3 @@ pip install "{{ cookiecutter.project }}"
 [![actions_status](https://github.com/bentoml/bentoml/workflows/CI/badge.svg)](https://github.com/bentoml/bentoml/actions)
 [![documentation_status](https://readthedocs.org/projects/bentoml/badge/?version=latest)](https://docs.bentoml.org/)
 [![join_slack](https://badgen.net/badge/Join/BentoML%20Slack/cyan?icon=slack)](https://join.slack.bentoml.org)
-
-BentoML makes it easy to create Machine Learning services that are ready to deploy and scale.
