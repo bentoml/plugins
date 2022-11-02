@@ -5,6 +5,7 @@ jeepney # depdendant of keyring -> hatch
 SecretStorage # depdendant of keyring -> hatch
 # tools
 black==22.3.0
+arize==5.2.0
 codecov
 coverage
 isort

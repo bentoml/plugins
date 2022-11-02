@@ -1,8 +1,8 @@
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
-def run_script(name, srcs = [], content = [], data = [], **kwargs):
+def run_shell(name, srcs = [], content = [], data = [], **kwargs):
     """
-    Create a run_script macro.
+    Create a run_shell macro.
     We will create a shell wrapper, and then return a target
     that can be used to run the shell wrapper. The shell wrapper
     will run under $BUILD_WORKSPACE_DIRECTORY.

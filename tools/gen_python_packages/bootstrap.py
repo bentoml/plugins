@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import typing as t
 import logging
 import argparse
 from pathlib import Path
@@ -22,8 +21,8 @@ logger = logging.getLogger("bentoml")
 
 
 @simple_filter
-def splitpart(value: t.Any, sep: str, index: int):
-    v = value.split(sep)
+def rpart(value: str, sep: str, index: int, maxsplit: int = 1) -> str:
+    v = value.rsplit(sep, maxsplit=maxsplit)
     try:
         return v[index]
     except IndexError:
@@ -71,6 +70,7 @@ if __name__ == "__main__":
         extra_context={
             "project_name": args.package,
             "bentoml_version": bentoml_version(),
+            "folder": "bentoml_plugins",
             "author": "Atalaya Tech Inc.",
         },
         overwrite_if_exists=args.parent_dir is None,

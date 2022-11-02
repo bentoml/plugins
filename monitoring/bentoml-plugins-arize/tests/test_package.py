@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 import arize.api
-
 from arize.utils.types import ModelTypes
 
 if TYPE_CHECKING:

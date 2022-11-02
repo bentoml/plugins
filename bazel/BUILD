@@ -2,7 +2,7 @@ package(default_visibility = ["//:__subpackages__"])
 
 exports_files([
     "python_rules.bzl",
-    "run_script.bzl",
+    "run_shell.bzl",
 ])
 
 filegroup(

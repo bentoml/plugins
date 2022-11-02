@@ -23,40 +23,28 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries",
 ]
 dynamic = ["version"]
 
 # NOTE: Make sure to add corresponding dependencies for given components here.
-dependencies = [
-    "bentoml=={{ cookiecutter.bentoml_version }}",
-    {%- if cookiecutter.provider != "" %}
-    "bentoml-{{ cookiecutter.features }}=={{ cookiecutter.bentoml_version }}",
-    {%- endif %}
-]
+dependencies = ["bentoml>={{ cookiecutter.bentoml_version }}"]
 
 # NOTE: If requires additional dependencies for specific components, add them here.
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "pytest-cov", "pytest-asyncio", "pytest-xdist"]
 
 [project.urls]
-Homepage = "https://github.com/bentoml/ecosystem/tree/main/{{ cookiecutter.folder }}/{{ cookiecutter.project }}"
+Homepage = "https://github.com/bentoml/bentoml_plugins/tree/main/{{ cookiecutter.folder }}/{{ cookiecutter.project }}"
 
 [tool.hatch.version]
-{%- if cookiecutter.provider != "" %}
-path = "src/bentoml/{{ cookiecutter.features }}/{{ cookiecutter.provider }}/version.py"
-{%- else %}
-path = "src/bentoml/{{ cookiecutter.features }}/version.py"
-{%- endif %}
+path = "src/bentoml_plugins/{{ cookiecutter.provider }}/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/tests"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/bentoml"]
-{%- if cookiecutter.provider != "" %}
-exclude = ["src/bentoml/{{ cookiecutter.features }}/{{ cookiecutter.provider }}/BUILD"]
-{%- else %}
-exclude = ["src/bentoml/{{ cookiecutter.features }}/BUILD"]
-{%- endif %}
+packages = ["src/bentoml_plugins"]
+exclude = ["src/bentoml_plugins/{{ cookiecutter.provider }}/BUILD"]
