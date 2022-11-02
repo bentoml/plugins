@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import typing as t
+from typing import TYPE_CHECKING
 import logging
 import datetime
 import functools
@@ -20,7 +21,9 @@ from bentoml.monitoring import MonitorBase
 BENTOML_MONITOR_ROLES = {"feature", "prediction", "target"}
 BENTOML_MONITOR_TYPES = {"numerical", "categorical", "numerical_sequence"}
 logger = logging.getLogger(__name__)
-DataType = t.Union[str, int, float, bool, t.List[float]]
+
+if TYPE_CHECKING:
+    DataType: t.TypeAlias = str | int | float | bool | list[float]
 
 
 @unique
@@ -197,9 +200,18 @@ _mapping_to_model_type = {
 }
 
 
+if TYPE_CHECKING:
+    MapData = tuple[
+        DataType | tuple[DataType, DataType] | None,
+        DataType | tuple[DataType, DataType] | None,
+        dict[str, DataType],
+        dict[str, Embedding],
+    ]
+
+
 def _map_data(
     record: dict[str, DataType], fields: _FieldStats, mapping: Mapping
-) -> tuple:
+) -> MapData:
     """
     Map bentoml monitoring record to arize fields
     """
@@ -389,7 +401,12 @@ class ArizeMonitor(MonitorBase[DataType]):
             assert isinstance(timestamp, float)
             prediction_id = record[self.COLUMN_RID]
             assert isinstance(prediction_id, int)
-            data_infos = self._data_converter(record)
+            (
+                prediction_label,
+                actual_label,
+                features,
+                embedding_features,
+            ) = self._data_converter(record)
             self._client.log(
                 model_id=self.model_id,
                 model_type=self.model_type,
@@ -399,10 +416,10 @@ class ArizeMonitor(MonitorBase[DataType]):
                 prediction_id=prediction_id,
                 prediction_timestamp=int(timestamp),
                 batch_id=None,
-                prediction_label=data_infos[0],
-                actual_label=data_infos[1],
-                features=data_infos[2],
-                embedding_features=data_infos[3],
+                prediction_label=prediction_label,  # type: ignore (invariant types)
+                actual_label=actual_label,  # type: ignore (invariant types)
+                features=features,  # type: ignore (invariant types)
+                embedding_features=embedding_features,
             )
 
     def log(
@@ -458,6 +475,6 @@ class ArizeMonitor(MonitorBase[DataType]):
     def log_table(
         self,
         data: t.Any,  # type: pandas.DataFrame
-        schema: list[dict[str, str]],
+        schema: dict[str, str],
     ) -> None:
         raise NotImplementedError("Not implemented yet")
