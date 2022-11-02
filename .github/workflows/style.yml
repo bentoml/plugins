@@ -15,7 +15,6 @@ on:
       - "requirements/**"
       - ".github/actions/**"
       - "monitoring/**"
-      - "bentoml-monitoring/**"
       - "WORKSPACE"
       - "BUILD.bazel"
       - "pyproject.toml"
@@ -48,6 +47,7 @@ jobs:
       - name: Run format check
         run: |
           bazel run //:check
+          bazel run //:buildifier_check
 
   lint:
     needs: format-check
@@ -63,5 +63,3 @@ jobs:
         uses: ./.github/actions/setup-repo
       - name: (pylint) Running lint on monitoring
         run: pylint monitoring
-      - name: (pylint) Running lint on bentoml-monitoring
-        run: pylint bentoml-monitoring

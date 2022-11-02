@@ -17,6 +17,8 @@ let
       glibcLocales
       coreutils
       git
+      bazel_5
+      nixfmt
     ] ++ lib.optional stdenv.isLinux inotify-tools
     ++ lib.optionals stdenv.isDarwin
     (with darwin.apple_sdk.frameworks; [ CoreFoundation CoreServices ]);

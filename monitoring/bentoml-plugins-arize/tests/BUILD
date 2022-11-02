@@ -10,6 +10,6 @@ pytest_suite(
         "--cov-report=term-missing",
     ],
     deps = [
-        requirement("arize")
+        requirement("arize"),
     ],
 )
