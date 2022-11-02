@@ -17,6 +17,7 @@ on:
       - "BUILD.bazel"
       - "pyproject.toml"
       - ".github/workflows/ci.yml"
+      - "monitoring/**"
 
 env:
   LINES: 200
@@ -46,3 +47,30 @@ jobs:
       - name: Run format check
         run: |
           bazel test //:test_vendor
+
+  monitoring-tests:
+    runs-on: ubuntu-latest
+    if: "!github.event.repository.fork" # Don't run on fork repository
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.7", "3.10"]
+        packages: ["bentoml-plugins-arize"]
+    name: python${{ matrix.python-version }} tests for ${{ matrix.packages }} (${{ matrix.os }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all tags and branches
+      - name: Setup CI
+        uses: ./.github/actions/setup-repo
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install ${{ matrix.packages }}
+        run: |
+          pushd monitoring/${{ matrix.packages }} >/dev/null
+          pip install ".[test]"
+      - name: Run tests
+        run: pytest tests
