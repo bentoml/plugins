@@ -25,6 +25,10 @@ runs:
       # NOTE: we have a wrapper that setup bazel locally, so we will run this
       # to download the binary to the GitHub runner.
       run: bazel --version
+    - uses: cachix/install-nix-action@v18
+      name: Setup Nix
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
     - name: Get pip cache dir
       id: pip-cache
       shell: bash
