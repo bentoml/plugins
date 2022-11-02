@@ -62,7 +62,13 @@ skip_glob = ["test/*", "venv/*", "lib/*", "bazel-*"]
 
 [tool.pyright]
 pythonVersion = "3.10"
-exclude = ["tools/gen_python_packages", "bazel-*/", "venv", "**/tests"]
+exclude = [
+  "tools/gen_python_packages",
+  "bazel-*/",
+  "venv",
+  "**/tests",
+  "typings",
+]
 venv = ["venv"]
 typeCheckingMode = "strict"
 analysis.useLibraryCodeForTypes = true
