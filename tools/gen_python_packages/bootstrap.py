@@ -3,11 +3,9 @@ from __future__ import annotations
 import os
 import logging
 import argparse
+import datetime
 from pathlib import Path
 from functools import lru_cache
-
-from cookiecutter.main import cookiecutter
-from cookiecutter.utils import simple_filter
 
 if "BUILD_WORKSPACE_DIRECTORY" in os.environ:
     # we are running with bazel. This is clearly a hack, but since we
@@ -20,15 +18,6 @@ else:
 logger = logging.getLogger("bentoml")
 
 
-@simple_filter
-def rpart(value: str, sep: str, index: int, maxsplit: int = 1) -> str:
-    v = value.rsplit(sep, maxsplit=maxsplit)
-    try:
-        return v[index]
-    except IndexError:
-        return ""
-
-
 @lru_cache(maxsize=1)
 def bentoml_version():
     from bentoml._internal.configuration import CLEAN_BENTOML_VERSION
@@ -39,6 +28,8 @@ def bentoml_version():
 TEMPLATE_CHOICES = ["gen_python_packages"]
 
 if __name__ == "__main__":
+    from cookiecutter.main import cookiecutter
+
     logger.debug(f"Current working directory: {os.getcwd()}.")
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -63,15 +54,20 @@ if __name__ == "__main__":
         output_path = _git_root
     if not output_path.exists():
         output_path.mkdir(exist_ok=True, parents=True)
+    project = args.package.replace("_", "-")
 
     cookiecutter(
         str(_git_root / "tools" / args.template),
         output_dir=str(output_path),
         extra_context={
-            "project_name": args.package,
-            "bentoml_version": bentoml_version(),
-            "folder": "bentoml_plugins",
-            "author": "Atalaya Tech Inc.",
+            "__project_name": args.package,
+            "__parent_dir": args.parent_dir,
+            "__project": project,
+            "__provider": project.rsplit("-", 1)[1],
+            "__bentoml_version": bentoml_version(),
+            "__folder": "bentoml_plugins",
+            "__author": "Atalaya Tech Inc.",
+            "__year": datetime.datetime.now().year,
         },
         overwrite_if_exists=args.parent_dir is None,
     )

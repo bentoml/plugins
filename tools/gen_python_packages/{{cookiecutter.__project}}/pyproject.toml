@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "{{ cookiecutter.project }}"
+name = "{{ cookiecutter.__project }}"
 description = "{{ cookiecutter.project_description }}"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "Apache-2.0" }
@@ -30,21 +30,25 @@ classifiers = [
 dynamic = ["version"]
 
 # NOTE: Make sure to add corresponding dependencies for given components here.
-dependencies = ["bentoml>={{ cookiecutter.bentoml_version }}"]
+dependencies = ["bentoml>={{ cookiecutter.__bentoml_version }}"]
 
 # NOTE: If requires additional dependencies for specific components, add them here.
 [project.optional-dependencies]
 test = ["pytest", "pytest-cov", "pytest-asyncio", "pytest-xdist"]
 
 [project.urls]
-Homepage = "https://github.com/bentoml/bentoml_plugins/tree/main/{{ cookiecutter.folder }}/{{ cookiecutter.project }}"
+{% if cookiecutter.__parent_dir is not none %}
+Homepage = "https://github.com/bentoml/bentoml_plugins/tree/main/{{ cookiecutter.__parent_dir }}/{{ cookiecutter.__project }}"
+{% else %}
+Homepage = "https://github.com/bentoml/bentoml_plugins/tree/main/{{ cookiecutter.__project }}"
+{% endif %}
 
 [tool.hatch.version]
-path = "src/bentoml_plugins/{{ cookiecutter.provider }}/version.py"
+path = "src/bentoml_plugins/{{ cookiecutter.__provider }}/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/tests"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/bentoml_plugins"]
-exclude = ["src/bentoml_plugins/{{ cookiecutter.provider }}/BUILD"]
+exclude = ["src/bentoml_plugins/{{ cookiecutter.__provider }}/BUILD"]

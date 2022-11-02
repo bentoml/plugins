@@ -1,8 +1,11 @@
 {
-    "project_name": "bentoml_plugins_provider",
-    "project_description": "BentoML Plugins Providers",
-    "project": "{{ cookiecutter.project_name | lower | replace('_','-') }}",
-    "provider": "{{ cookiecutter.project | rpart('-', 1) }}",
-    "year": "{% now 'utc', '%Y' %}",
-    "_extensions": ["bootstrap.rpart","jinja2_time.TimeExtension"]
+    "project_description": "<description for this project>",
+    "__project_name": "",
+    "__project": "",
+    "__provider": "",
+    "__folder": "",
+    "__bentoml_version": "",
+    "__author": "",
+    "__year": "",
+    "__parent_dir": ""
 }
