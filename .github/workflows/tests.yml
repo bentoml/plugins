@@ -1,7 +1,7 @@
-name: Style
+name: Tests
 
 concurrency:
-  group: style-check-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
+  group: tests-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 on:
@@ -18,7 +18,7 @@ on:
       - "WORKSPACE"
       - "BUILD.bazel"
       - "pyproject.toml"
-      - ".github/workflows/style.yml"
+      - ".github/workflows/tests.yml"
 
 env:
   LINES: 200
@@ -33,10 +33,17 @@ defaults:
     shell: bash --noprofile --norc -exo pipefail {0}
 
 jobs:
-  format-check:
+  monitoring-tests:
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python_version: ["3.7", "3.10"]
+        packages: ["bentoml-plugins-arize"]
+    name: python${{ matrix.python-version }} tests for ${{ matrix.packages }} (${{ matrix.os }})
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -44,22 +51,11 @@ jobs:
           fetch-depth: 0 # fetch all tags and branches
       - name: Setup CI
         uses: ./.github/actions/setup-repo
-      - name: Run format check
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install ${{ matrix.packages }}
         run: |
-          bazel run //:check
-          bazel run //:buildifier_check
-
-  lint:
-    needs: format-check
-    runs-on: ubuntu-latest
-    if: "!github.event.repository.fork" # Don't run on fork repository
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # fetch all tags and branches
-      - name: Setup CI
-        uses: ./.github/actions/setup-repo
-      - name: (pylint) Running lint on monitoring
-        run: pylint monitoring
+          pushd monitoring/${{ matrix.packages }} >/dev/null
+          pip install ".[test]"
+      - name: Run tests
+        run: pytest tests

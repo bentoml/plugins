@@ -13,11 +13,6 @@ filegroup(
     srcs = ["pyproject.toml"],
 )
 
-buildifier(
-    name = "buildifier",
-    exclude_patterns = ["./tools/gen_python_packages/**/*"],
-)
-
 # This rule adds a convenient way to update the requirements.txt
 # lockfile based on the requirements.in.
 # Note that this rules will be used to distribute package with bazel.
@@ -85,6 +80,11 @@ run_shell(
     ],
 )
 
+buildifier(
+    name = "buildifier",
+    exclude_patterns = ["./tools/gen_python_packages/**/*"],
+)
+
 run_shell(
     name = "check",
     content = [
@@ -100,4 +100,10 @@ run_shell(
         ":pyproject",
         "@nixfmt//:bin/nixfmt",
     ],
+)
+
+buildifier(
+    name = "buildifier_check",
+    exclude_patterns = ["./tools/gen_python_packages/**/*"],
+    mode = "check",
 )
