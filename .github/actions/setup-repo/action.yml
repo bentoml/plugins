@@ -30,6 +30,7 @@ runs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - name: Install nixfmt
+      shell: bash
       run: nix-env -iA nixpkgs.nixfmt
     - name: Get pip cache dir
       id: pip-cache
