@@ -1,7 +1,13 @@
 import concurrent.futures as cf
-from typing import Dict, Optional, Tuple, Union, Any
-from arize.utils.types import Embedding, Environments, ModelTypes
+from typing import Any
+from typing import Dict
+from typing import Tuple
+from typing import Union
+from typing import Optional
 
+from arize.utils.types import Embedding
+from arize.utils.types import ModelTypes
+from arize.utils.types import Environments
 
 class Client:
     """
@@ -26,7 +32,6 @@ class Client:
         :param timeout (int, optional): How long to wait for the server to send data before giving up. Defaults to 200.
         """
         ...
-
     def log(
         self,
         prediction_id: Union[str, int, float],

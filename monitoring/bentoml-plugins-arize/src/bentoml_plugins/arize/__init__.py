@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import os
 import typing as t
-from typing import TYPE_CHECKING
 import logging
 import datetime
 import functools
 import collections
 from enum import Enum
 from enum import unique
+from typing import TYPE_CHECKING
 
 import attr
 from arize.api import Client
@@ -22,7 +22,7 @@ BENTOML_MONITOR_ROLES = {"feature", "prediction", "target"}
 BENTOML_MONITOR_TYPES = {"numerical", "categorical", "numerical_sequence"}
 logger = logging.getLogger(__name__)
 
-# NOTE: DataType is a runtime type check.
+# Note that DataType is a runtime type.
 DataType = t.Union[str, int, float, bool, t.List[float]]
 
 
