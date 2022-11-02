@@ -67,7 +67,7 @@ def init_context(monkeypatch: MonkeyPatch) -> None:
 
 
 def test_mapping(init_context) -> None:
-    from bentoml_monitoring_arize import ArizeMonitor
+    from bentoml_plugins.arize import ArizeMonitor
 
     monitor = ArizeMonitor(
         "my_monitor_1",
