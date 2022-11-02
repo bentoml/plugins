@@ -22,8 +22,8 @@ BENTOML_MONITOR_ROLES = {"feature", "prediction", "target"}
 BENTOML_MONITOR_TYPES = {"numerical", "categorical", "numerical_sequence"}
 logger = logging.getLogger(__name__)
 
-if TYPE_CHECKING:
-    DataType: t.TypeAlias = str | int | float | bool | list[float]
+# NOTE: DataType is a runtime type check.
+DataType = t.Union[str, int, float, bool, t.List[float]]
 
 
 @unique
