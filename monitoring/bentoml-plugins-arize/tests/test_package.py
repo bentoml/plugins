@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 class Client:
-    LOG_ARGS = []
-    INIT_ARGS = []
+    LOG_ARGS: list[dict[str, t.Any]] = []
+    INIT_ARGS: list[dict[str, t.Any]] = []
 
     def __init__(
         self,
@@ -66,7 +66,7 @@ def fixture_init_context(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(arize.api, "Client", Client)
 
 
-def test_mapping(init_context) -> None:
+def test_mapping(init_context: None) -> None:
     from bentoml_plugins.arize import ArizeMonitor
 
     monitor = ArizeMonitor(

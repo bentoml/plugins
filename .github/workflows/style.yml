@@ -50,7 +50,6 @@ jobs:
           bazel run //:buildifier_check
 
   lint:
-    needs: format-check
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
     timeout-minutes: 20
@@ -62,4 +61,31 @@ jobs:
       - name: Setup CI
         uses: ./.github/actions/setup-repo
       - name: (pylint) Running lint on monitoring
-        run: pylint monitoring
+        run: pylint monitoring --fail-under 9.5
+
+  type:
+    runs-on: ubuntu-latest
+    if: "!github.event.repository.fork" # Don't run on fork repository
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all tags and branches
+      - name: Setup CI
+        uses: ./.github/actions/setup-repo
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+      - name: Install pyright
+        run: npm install -g npm@^7 pyright
+      - name: Get current branch.
+        id: current-branch
+        run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+      - name: (pyright) Running type checking on PR
+        if: ${{ steps.current-branch.outputs.branch != 'main' }}
+        run: git diff --name-only --diff-filter=d "origin/$GITHUB_BASE_REF" -z -- '*.py[i]' | xargs -0 --no-run-if-empty pyright
+      - name: (pyright) Run type checking
+        if: ${{ steps.current-branch.outputs.branch == 'main' }}
+        run: pyright .
