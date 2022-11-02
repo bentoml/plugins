@@ -54,8 +54,8 @@ BENTO_VERSION = "my_bento_version"
 REQUEST_ID = 214121
 
 
-@pytest.fixture(autouse=True)
-def init_context(monkeypatch: MonkeyPatch) -> None:
+@pytest.fixture(autouse=True, name="init_context")
+def fixture_init_context(monkeypatch: MonkeyPatch) -> None:
     from bentoml._internal.context import trace_context
     from bentoml._internal.context import component_context
 

@@ -5,16 +5,17 @@ testpaths = ["tests"]
 
 [tool.pylint.main]
 recursive = true
-extension-pkg-allow-list = [
-  "numpy",
-  "tensorflow",
-  "torch",
-  "paddle",
-  "onnxruntime",
-  "onnx",
-  "pydantic.schema",
-]
+extension-pkg-allow-list = ["pydantic.schema", "arize"]
 enable = ["c-extension-no-member"]
+disable = [
+  "coerce-builtin",
+  "no-absolute-import",
+  "import-error",
+  "no-name-in-module",
+  "no-member",
+  "C",
+  "R",
+]
 evaluation = "10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)"
 msg-template = "{msg_id}:{symbol} [{line:0>3d}:{column:0>2d}] {obj}: {msg}"
 output-format = "colorized"

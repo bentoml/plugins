@@ -6,7 +6,10 @@ package(default_visibility = ["//visibility:public"])
 pytest_suite(
     name = "package",
     args = [
-        "--cov=bentoml.monitoring.arize",
+        "--cov=bentoml_plugins.arize",
         "--cov-report=term-missing",
+    ],
+    deps = [
+        requirement("arize")
     ],
 )

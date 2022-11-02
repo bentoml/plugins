@@ -1,16 +1,16 @@
 <!-- Bootstrap using cookiecutter with templates tools/gen_python_packages -->
 <!-- Feel free to edit and add additional information here. -->
 
-# {{ cookiecutter.project }}
+# {{ cookiecutter.__project }}
 
 _{{cookiecutter.project_description }}_
 
 ## Installation
 
-`{{ cookiecutter.project }}` is distributed via PyPI:
+`{{ cookiecutter.__project }}` is distributed via PyPI:
 
 ```bash
-pip install "{{ cookiecutter.project }}"
+pip install "{{ cookiecutter.__project }}"
 ```
 
 [<img src="https://raw.githubusercontent.com/bentoml/BentoML/main/docs/source/_static/img/bentoml-readme-header.jpeg" width="600px" margin-left="-5px">](https://github.com/bentoml/BentoML)

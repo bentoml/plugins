@@ -5,5 +5,5 @@ package(default_visibility = ["//visibility:public"])
 
 pytest_suite(
     name = "package",
-    args = ["--cov={{ cookiecutter.project | replace('-', '.') }}", "--cov-report=term-missing"],
+    args = ["--cov=bentoml_plugins"],
 )

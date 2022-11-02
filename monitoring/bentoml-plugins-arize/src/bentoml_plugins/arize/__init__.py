@@ -318,7 +318,7 @@ class ArizeMonitor(MonitorBase[DataType]):
         ] = collections.defaultdict(collections.deque)
 
     def _init_client(self):
-        self._client = Client(
+        self._client = Client(  # pylint: disable=attribute-defined-outside-init
             api_key=self.api_key,
             space_key=self.space_key,
             uri=self.uri,
@@ -352,8 +352,8 @@ class ArizeMonitor(MonitorBase[DataType]):
         """
         fields = _stat_fields(self._schema)
         mapping = _infer_mapping(fields, self.model_type)
-        self._data_converter = functools.partial(
-            _map_data, fields=fields, mapping=mapping
+        self._data_converter = (  # pylint: disable=attribute-defined-outside-init
+            functools.partial(_map_data, fields=fields, mapping=mapping)
         )
 
         if self.model_type is None:
