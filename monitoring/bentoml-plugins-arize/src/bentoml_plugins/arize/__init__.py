@@ -17,6 +17,8 @@ from arize.utils.types import ModelTypes
 from arize.utils.types import Environments
 
 from bentoml.monitoring import MonitorBase
+from bentoml._internal.context import trace_context
+from bentoml._internal.context import component_context
 
 BENTOML_MONITOR_ROLES = {"feature", "prediction", "target"}
 BENTOML_MONITOR_TYPES = {"numerical", "categorical", "numerical_sequence"}
@@ -48,7 +50,7 @@ class _FieldStats:
     embedding_feature_columns: list[str] = attr.field(factory=list)
 
 
-def _stat_fields(schema: list[dict[str, str]]) -> _FieldStats:
+def _stat_fields(schema: t.Iterable[dict[str, str]]) -> _FieldStats:
     fields = _FieldStats()
     for column in schema:
         if column["role"] == "feature":
@@ -201,7 +203,7 @@ _mapping_to_model_type = {
 
 
 if TYPE_CHECKING:
-    MapData = tuple[
+    MapData: t.TypeAlias = tuple[
         DataType | tuple[DataType, DataType] | None,
         DataType | tuple[DataType, DataType] | None,
         dict[str, DataType],
@@ -322,7 +324,7 @@ class ArizeMonitor(MonitorBase[DataType]):
         self._is_recording = False
         self._is_first_record = True
         self._is_first_column = False
-        self._schema: list[dict[str, str]] = []
+        self._schema: dict[str, dict[str, str]] = {}
         self._arize_schema: list[dict[str, str]] = []
         self._columns: dict[
             str,
@@ -362,7 +364,7 @@ class ArizeMonitor(MonitorBase[DataType]):
         """
         Export schema of the data. This method should be called right after the first record.
         """
-        fields = _stat_fields(self._schema)
+        fields = _stat_fields(self._schema.values())
         mapping = _infer_mapping(fields, self.model_type)
         self._data_converter = (  # pylint: disable=attribute-defined-outside-init
             functools.partial(_map_data, fields=fields, mapping=mapping)
@@ -372,7 +374,6 @@ class ArizeMonitor(MonitorBase[DataType]):
             self.model_type = _mapping_to_model_type[mapping]
 
         if self.model_version is None and self.model_id is None:
-            from bentoml._internal.context import component_context
 
             self.model_id = component_context.bento_name
             self.model_version = component_context.bento_version
@@ -441,11 +442,18 @@ class ArizeMonitor(MonitorBase[DataType]):
         assert data_type in BENTOML_MONITOR_TYPES, f"Invalid data type {data_type}"
 
         if self._is_first_record:
-            self._schema.append({"name": name, "role": role, "type": data_type})
+            if name not in self._schema:
+                self._schema[name] = {
+                    "name": name,
+                    "role": role,
+                    "type": data_type,
+                }
+            else:
+                logger.warning(
+                    "Column %s already exists in the schema. Will be ignored.", name
+                )
         if self._is_first_column:
             self._is_first_column = False
-
-            from bentoml._internal.context import trace_context
 
             # universal columns
             self._columns[self.COLUMN_TIME].append(datetime.datetime.now().timestamp())
@@ -464,13 +472,42 @@ class ArizeMonitor(MonitorBase[DataType]):
         """
         Log a batch of data. The data will be logged as a single column.
         """
+        if name in self.PRESERVED_COLUMNS:
+            raise ValueError(
+                f"Column name {name} is preserved. Please use a different name."
+            )
+
+        assert role in BENTOML_MONITOR_ROLES, f"Invalid role {role}"
+        assert data_type in BENTOML_MONITOR_TYPES, f"Invalid data type {data_type}"
+
+        if self._is_first_record:
+            if name not in self._schema:
+                self._schema[name] = {
+                    "name": name,
+                    "role": role,
+                    "type": data_type,
+                }
+            else:
+                logger.warning(
+                    "Column %s already exists in the schema. Will be ignored.", name
+                )
+
         try:
             for data in data_batch:
-                self.log(data, name, role, data_type)
+                self._columns[name].append(data)
+                if self._is_first_column:
+                    assert trace_context.request_id is not None
+                    # universal columns
+                    self._columns[self.COLUMN_TIME].append(
+                        datetime.datetime.now().timestamp()
+                    )
+                    self._columns[self.COLUMN_RID].append(trace_context.request_id)
         except TypeError:
             raise ValueError(
                 "data_batch is not iterable. Please use log() to log a single data."
             ) from None
+        if self._is_first_column:
+            self._is_first_column = False
 
     def log_table(
         self,
