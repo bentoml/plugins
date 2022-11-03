@@ -220,7 +220,7 @@ def _map_data(
     if mapping == Mapping.SCORED_CLASSIFICATION:
         prediction_label = (
             (
-                record[fields.prediction_label_columns[0]],
+                str(record[fields.prediction_label_columns[0]]),
                 record[fields.prediction_score_columns[0]],
             )
             if fields.prediction_label_columns
@@ -236,7 +236,7 @@ def _map_data(
         )
     elif mapping == Mapping.CLASSIFICATION:
         prediction_label = (
-            record[fields.prediction_label_columns[0]]
+            str(record[fields.prediction_label_columns[0]])
             if fields.prediction_label_columns
             else None
         )
@@ -296,6 +296,7 @@ class ArizeMonitor(MonitorBase[DataType]):
         model_version: str | None = None,
         environment: Environments | None = None,
         model_tags: dict[str, str | bool | float | int] | None = None,
+        **_: t.Any,
     ):
         self.name = name
 
