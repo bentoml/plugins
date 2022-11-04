@@ -49,6 +49,3 @@ runs:
     - name: Install development dependencies
       shell: bash
       run: python -m pip install -r requirements/dev-requirements.lock.txt
-    - name: Install development dependencies
-      shell: bash
-      run: python -m pip install git+https://github.com/bentoml/bentoml.git@main
