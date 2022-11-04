@@ -69,8 +69,10 @@ def fixture_init_context(monkeypatch: MonkeyPatch) -> None:
 def test_mapping(init_context: None) -> None:
     from bentoml_plugins.arize import ArizeMonitor
 
+    monitor_name = "my_model_1"
+
     monitor = ArizeMonitor(
-        "my_monitor_1",
+        monitor_name,
         space_key=MY_SPACE_KEY,
         api_key=MY_API_KEY,
         uri=URI,
@@ -80,13 +82,13 @@ def test_mapping(init_context: None) -> None:
     monitor.stop_record()
     assert monitor.model_type == ModelTypes.SCORE_CATEGORICAL
     assert Client.INIT_ARGS[-1]["space_key"] == MY_SPACE_KEY
-    assert Client.LOG_ARGS[-1]["model_id"] == BENTO_NAME
+    assert Client.LOG_ARGS[-1]["model_id"] == f"{BENTO_NAME}:{monitor_name}"
     assert Client.LOG_ARGS[-1]["model_version"] == BENTO_VERSION
     assert Client.LOG_ARGS[-1]["prediction_id"] == REQUEST_ID
     assert Client.LOG_ARGS[-1]["model_type"] == ModelTypes.SCORE_CATEGORICAL
 
     monitor = ArizeMonitor(
-        "my_monitor_1",
+        monitor_name,
         space_key="my_space_key",
         api_key="my_api_key",
         uri="http://localhost:5000/v1",
