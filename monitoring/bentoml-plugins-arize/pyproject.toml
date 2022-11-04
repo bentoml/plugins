@@ -30,7 +30,7 @@ classifiers = [
 dynamic = ["version"]
 
 # NOTE: Make sure to add corresponding dependencies for given components here.
-dependencies = ["git+https://github.com/bentoml/bentoml.git@main", "arize>=5.2.0"]
+dependencies = ["bentoml", "arize>=5.2.0"]
 
 # NOTE: If requires additional dependencies for specific components, add them here.
 [project.optional-dependencies]
