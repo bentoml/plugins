@@ -278,10 +278,6 @@ def _map_data(
 
 
 class ArizeMonitor(MonitorBase[DataType]):
-    """ """
-
-    PRESERVED_COLUMNS = (COLUMN_TIME, COLUMN_RID) = ("timestamp", "request_id")
-
     def __init__(
         self,
         name: str,
@@ -357,7 +353,7 @@ class ArizeMonitor(MonitorBase[DataType]):
 
         if self.model_version is None and self.model_id is None:
 
-            self.model_id = component_context.bento_name
+            self.model_id = f"{component_context.bento_name}:{self.name}"
             self.model_version = component_context.bento_version
 
         if self.environment is None:
