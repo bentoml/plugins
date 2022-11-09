@@ -11,5 +11,6 @@ pytest_suite(
     ],
     deps = [
         requirement("arize"),
+        "//monitoring/bentoml-plugins-arize/src/bentoml_plugins/arize",
     ],
 )

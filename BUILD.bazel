@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
@@ -16,19 +16,13 @@ filegroup(
 # This rule adds a convenient way to update the requirements.txt
 # lockfile based on the requirements.in.
 # Note that this rules will be used to distribute package with bazel.
-[
-    compile_pip_requirements(
-        name = "{}_requirements".format(name),
-        extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
-        requirements_in = "//requirements:{}-requirements.in".format(name),
-        requirements_txt = "//requirements:{}-requirements.lock.txt".format(name),
-        visibility = ["//visibility:__pkg__"],
-    )
-    for name in [
-        "base",
-        "dev",
-    ]
-]
+compile_pip_requirements(
+    name = "dev_requirements",
+    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
+    requirements_in = "//requirements:dev-requirements.txt",
+    requirements_txt = "//requirements:dev-requirements.lock.txt",
+    visibility = ["//visibility:__pkg__"],
+)
 
 # The requirements.bzl file is generated with a reference to the interpreter for the host platform.
 # In order to check in a platform-agnostic file, we have to replace that reference with the symbol
@@ -89,21 +83,29 @@ run_shell(
     name = "check",
     content = [
         # Running isort and black
-        "black --check .",
-        "isort --check .",
+        "black --check --diff .",
+        "isort --check --diff .",
+        "flake8 .",
+        "ruff .",
         # Running nixfmt
         "command -v nix >/dev/null 2>&1 && nixfmt --check **/*.nix || (echo 'Nix is not installed, skipping running nixfmt...'; exit 0)",
     ],
     data = [
         requirement("black"),
         requirement("isort"),
+        requirement("flake8"),
+        requirement("flake8-pyproject"),
+        requirement("flake8-quotes"),
+        requirement("ruff"),
         ":pyproject",
         "@nixfmt//:bin/nixfmt",
     ],
 )
 
-buildifier(
-    name = "buildifier_check",
-    exclude_patterns = ["./tools/gen_python_packages/**/*"],
-    mode = "check",
+buildifier_test(
+    name = "buildifier_test",
+    srcs = glob([
+        "**/*.bzl",
+        "monitoring/**/*/BUILD",
+    ]),
 )
