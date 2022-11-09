@@ -48,6 +48,3 @@ include = ["/src", "/tests"]
 [tool.hatch.build.targets.wheel]
 packages = ["src/bentoml_plugins"]
 exclude = ["src/bentoml_plugins/arize/BUILD"]
-
-[tool.pyright]
-pythonVersion = "3.11"

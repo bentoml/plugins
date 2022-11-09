@@ -1,0 +1,16 @@
+-r base-requirements.txt
+-r test-requirements.txt
+-r external-requirements.txt
+-r bazel-requirements.txt
+hatch
+cookiecutter
+black
+codecov
+coverage
+isort
+ruff
+flake8
+flake8-pyproject
+flake8-quotes
+annotated-types
+build[virtualenv]

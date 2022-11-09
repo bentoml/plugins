@@ -8,5 +8,7 @@ py_library(
     srcs = ["__init__.py"],
     deps = [
         requirement("bentoml"),
+        requirement("arize"),
+        requirement("attrs"),
     ],
 )
