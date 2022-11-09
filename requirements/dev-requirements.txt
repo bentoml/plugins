@@ -1,6 +1,7 @@
 -r base-requirements.txt
 -r test-requirements.txt
 -r external-requirements.txt
+-r bazel-requirements.txt
 hatch
 cookiecutter
 black
