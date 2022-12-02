@@ -4,8 +4,8 @@ load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "bui
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
-load("//bazel:run_shell.bzl", "run_shell")
-load("//:requirements.bzl", "requirement")
+load("@com_github_bentoml_bentoml//rules:utils.bzl", "run_shell")
+load("@pypi//:requirements.bzl", "entry_point", "requirement")
 
 # export default pyproject.toml config
 filegroup(
@@ -24,88 +24,45 @@ compile_pip_requirements(
     visibility = ["//visibility:__pkg__"],
 )
 
-# The requirements.bzl file is generated with a reference to the interpreter for the host platform.
-# In order to check in a platform-agnostic file, we have to replace that reference with the symbol
-# loaded from our python toolchain.
-genrule(
-    name = "platform_agnostic",
-    srcs = ["@ecosystem//:requirements.bzl"],
-    outs = ["requirements.bzl"],
-    cmd = " | ".join([
-        "cat $<",
-        # Insert our load statement after the existing one so we don't produce a file with buildifier warnings
-        """sed -e '/^load.*/i\\'$$'\\n''load("@python310//:defs.bzl", "interpreter")'""",
-        """tr "'" '"' """,
-        """sed 's#"@python310_.*//:bin/python3"#interpreter#' >$@""",
-    ]),
-)
+[
+    alias(
+        name = tool,
+        actual = entry_point(tool),
+    )
+    for tool in [
+        "black",
+        "isort",
+        "ruff",
+    ]
+]
 
-# Similarly ensures that the requirements.bzl file is updated based on the requirements.txt lockfile.
-diff_test(
-    name = "test_vendor",
-    failure_message = "Please run: bazel run //:vendor_requirements",
-    file1 = "//:requirements.bzl",
-    file2 = ":platform_agnostic",
+alias(
+    name = "flake8",
+    actual = "//rules/py:flake8",
 )
 
 run_shell(
-    name = "vendor_requirements",
-    content = [
-        "cp -fv bazel-bin/requirements.bzl requirements.bzl",
-    ],
-    data = [":platform_agnostic"],
-)
-
-run_shell(
-    name = "format",
-    content = [
-        # Running isort and black
-        "black .",
-        "black --pyi typings/",
-        "isort .",
-        # Running nixfmt
-        "command -v nix >/dev/null 2>&1 && find . -name '*.nix' -exec nixfmt {} \\; || (echo 'Nix is not installed, skipping running nixfmt...'; exit 0)",
-    ],
-    data = [
-        requirement("black"),
-        requirement("isort"),
-        ":pyproject",
-        "@nixfmt//:bin/nixfmt",
-    ],
+    name = "nixfmt",
+    content = ["find . -name '*.nix' -exec nixfmt {} \\; || (echo 'Failed to run nixfmt.'; exit 1)"],
+    data = ["@nixfmt//:bin/nixfmt"],
 )
 
 buildifier(
-    name = "buildifier",
+    name = "buildfmt",
     exclude_patterns = ["./tools/gen_python_packages/**/*"],
 )
 
-run_shell(
-    name = "check",
-    content = [
-        # Running isort and black
-        "black --check --diff .",
-        "isort --check --diff .",
-        "flake8 .",
-        "ruff .",
-        # Running nixfmt
-        "command -v nix >/dev/null 2>&1 && nixfmt --check **/*.nix || (echo 'Nix is not installed, skipping running nixfmt...'; exit 0)",
-    ],
-    data = [
-        requirement("black"),
-        requirement("isort"),
-        requirement("flake8"),
-        requirement("flake8-pyproject"),
-        requirement("flake8-quotes"),
-        requirement("ruff"),
-        ":pyproject",
-        "@nixfmt//:bin/nixfmt",
-    ],
-)
-
 buildifier_test(
-    name = "buildifier_test",
+    name = "buildcheck",
     srcs = glob([
         "**/*.bzl",
+        "**/*.bazel",
         "monitoring/**/*/BUILD",
     ]),
+)
+
+run_shell(
+    name = "nixcheck",
+    content = ["nixfmt --check **/*.nix || (echo 'Failed to run nixfmt check'; exit 1)"],
+    data = ["@nixfmt//:bin/nixfmt"],
 )

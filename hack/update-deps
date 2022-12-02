@@ -8,6 +8,3 @@ cd "$GIT_ROOT" || exit 1
 
 # Run all rules involving *-requirements.update
 bazel run //:dev_requirements.update
-
-# Run vendor update
-bazel run //:vendor_requirements

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+cd "$GIT_ROOT" || exit 1
+
+bazel run --run_under="cd $GIT_ROOT &&" //:black -- .
+bazel run --run_under="cd $GIT_ROOT &&" //:black -- --pyi "$GIT_ROOT/typings"
+bazel run --run_under="cd $GIT_ROOT &&" //:isort -- .
+bazel run //:buildfmt

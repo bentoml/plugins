@@ -1,43 +1,35 @@
-workspace(name = "com_github_bentoml_ecosystem")
+workspace(name = "com_github_bentoml_plugins")
 
-load("//bazel:deps.bzl", "internal_deps")
+load("//rules:deps.bzl", "internal_deps")
 
 internal_deps()
 
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@com_github_bentoml_bentoml//rules:deps.bzl", "bentoml_dependencies")
 
-go_rules_dependencies()
+bentoml_dependencies()
 
-go_register_toolchains(version = "1.19")
+load("@com_github_bentoml_bentoml//rules:workspace0.bzl", "workspace0")
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+workspace0()
 
-gazelle_dependencies()
+load("@com_github_bentoml_bentoml//rules:workspace1.bzl", "workspace1")
 
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+workspace1()
 
-protobuf_deps()
+load("@com_github_bentoml_bentoml//rules:workspace2.bzl", "workspace2")
 
-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+workspace2()
 
-python_register_toolchains(
-    name = "python310",
-    python_version = "3.10",
-)
-
-load("@python310//:defs.bzl", "interpreter")
 load("@rules_python//python:pip.bzl", "pip_parse")
 
+# NOTE: This is currently a hack to have a same name with com_github_bentoml_bentoml
+# pypi requirements to load its py_test rules
 pip_parse(
-    name = "ecosystem",
-    python_interpreter_target = interpreter,
+    name = "pypi",
     requirements_lock = "//requirements:dev-requirements.lock.txt",
 )
 
-# We are vendoring dependencies requirements from pip_parse
-# This way our Bazel doesn't eagerly fetch and install the pip_parse'd
-# repository for builds that don't need it.
-load("//:requirements.bzl", "install_deps")
+load("@pypi//:requirements.bzl", "install_deps")
 
 install_deps()
 

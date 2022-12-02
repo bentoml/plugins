@@ -1,1 +1,4 @@
-__version__ = "1.0.8dev0"
+"""
+Update with bazel run //:update_version -- <new_version>
+"""
+__version__ = "0.1.0"

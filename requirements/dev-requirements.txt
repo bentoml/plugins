@@ -1,7 +1,8 @@
--r base-requirements.txt
--r test-requirements.txt
--r external-requirements.txt
--r bazel-requirements.txt
+bentoml[all]>=1.0.10
+pytest
+pytest-cov
+pytest-xdist[psutil]
+pytest-asyncio
 hatch
 cookiecutter
 black
@@ -14,3 +15,16 @@ flake8-pyproject
 flake8-quotes
 annotated-types
 build[virtualenv]
+setuptools-scm[toml]
+# transitive deps that requires specifying.
+jeepney # depedendant of keyring -> hatch
+SecretStorage # depedendant of keyring -> hatch
+importlib-metadata>=3.6 # depedendant of keyring -> hatch
+filetype # dependency of bentoml[all]
+pandas # dependency of bentoml[all]
+pyarrow # dependency of bentoml[all]
+pydantic==1.10.2 # dependency of bentoml[all]
+Pillow==9.3.0 # dependency of bentoml[all]
+fs-s3fs==1.1.1 # dependency of bentoml[all]
+# plugins dependencies
+-r external-requirements.txt

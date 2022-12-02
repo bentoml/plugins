@@ -1,2 +1,1 @@
-# plugins
-arize
+arize  # monitoring-arize-plugin

@@ -130,3 +130,7 @@ dmypy.json
 
 # bazel generated files
 bazel-*
+.updatedeps.lock
+
+# ignore generated lock.
+*.lock.txt
