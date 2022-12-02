@@ -5,7 +5,7 @@ load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
 load("@com_github_bentoml_bentoml//rules:utils.bzl", "run_shell")
-load("@plugins//:requirements.bzl", "entry_point", "requirement")
+load("@pypi//:requirements.bzl", "entry_point", "requirement")
 
 # export default pyproject.toml config
 filegroup(

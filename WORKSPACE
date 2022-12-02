@@ -22,12 +22,14 @@ workspace2()
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 
+# NOTE: This is currently a hack to have a same name with com_github_bentoml_bentoml
+# pypi requirements to load its py_test rules
 pip_parse(
-    name = "plugins",
+    name = "pypi",
     requirements_lock = "//requirements:dev-requirements.lock.txt",
 )
 
-load("@plugins//:requirements.bzl", "install_deps")
+load("@pypi//:requirements.bzl", "install_deps")
 
 install_deps()
 

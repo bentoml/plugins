@@ -15,6 +15,7 @@ flake8-pyproject
 flake8-quotes
 annotated-types
 build[virtualenv]
+setuptools-scm[toml]
 # transitive deps that requires specifying.
 jeepney # depedendant of keyring -> hatch
 SecretStorage # depedendant of keyring -> hatch

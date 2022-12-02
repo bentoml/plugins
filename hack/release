@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$#" -eq 1 ]; then
+	PACKAGE_PATH="$1"
+else
+	echo "Must provide a package path: ./hack/release monitoring/bentoml-plugins-arize"
+	exit 1
+fi
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+cd "$GIT_ROOT" || exit 1
+
+! [[ -d "$GIT_ROOT/$PACKAGE_PATH" ]] && echo "Package $PACKAGE_PATH does not exist." && exit 1
+
+pushd "$GIT_ROOT/$PACKAGE_PATH" >/dev/null
+
+echo "Installing release dependencies if not already installed."
+
+pip freeze | grep "hatch" 2>&1 || pip install hatch
+
+hatch build -c
+
+_version=$(hatch version)
+
+# Use testpypi by default, run script with: "REPO=pypi release.sh" for
+# releasing to Pypi.org
+REPO=${REPO:=testpypi}
+
+echo "Uploading PyPI package to $REPO..."
+twine upload --repository $REPO dist/* --verbose
+
+echo "Done releasing $PACKAGE_PATH version $_version to $REPO."
+
+popd >/dev/null

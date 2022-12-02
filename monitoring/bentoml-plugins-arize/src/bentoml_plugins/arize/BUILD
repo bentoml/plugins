@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_python//python:defs.bzl", "py_library")
-load("@plugins//:requirements.bzl", "requirement")
+load("@pypi//:requirements.bzl", "requirement")
 
 py_library(
     name = "arize",
