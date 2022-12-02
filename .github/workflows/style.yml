@@ -46,8 +46,8 @@ jobs:
         uses: ./.github/actions/setup-repo
       - name: Run format check
         run: |
-          bazel run //:check
-          bazel run //:buildifier_test
+          ./hack/lint
+          bazel run //:buildcheck
 
   type:
     runs-on: ubuntu-latest

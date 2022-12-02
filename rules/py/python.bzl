@@ -28,8 +28,7 @@ def py_test(name, args = [], data = [], **kwargs):
         },
         deps = [
             ":__test__",
-            "@com_github_bentoml_bentoml//:sdk",
-            "@com_github_bentoml_bentoml//:cli",
+            "@com_github_bentoml_bentoml//src/bentoml:bentoml",
             requirement("pytest"),
             requirement("pytest-xdist"),
             requirement("pytest-asyncio"),

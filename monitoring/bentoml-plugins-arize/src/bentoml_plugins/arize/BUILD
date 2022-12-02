@@ -8,7 +8,7 @@ py_library(
     srcs = ["__init__.py"],
     imports = ["../.."],
     deps = [
-        requirement("bentoml"),
+        "@com_github_bentoml_bentoml//src/bentoml",
         requirement("arize"),
         requirement("attrs"),
     ],

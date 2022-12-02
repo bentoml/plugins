@@ -67,7 +67,6 @@ if ! [ -f "$GIT_ROOT/.updatedeps.lock" ]; then
 	echo "INFO: Running updating depdencies and lock pip packages..." >&2
 	touch "$GIT_ROOT/.updatedeps.lock"
 	"${filename_abs}" run //:dev_requirements.update
-	"${filename_abs}" run //:vendor_requirements
 fi
 
 pushd "$GIT_ROOT" >/dev/null
