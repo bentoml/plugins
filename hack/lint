@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+cd "$GIT_ROOT" || exit 1
+
+bazel run --run_under="cd $GIT_ROOT &&" //:black -- --check --diff .
+bazel run --run_under="cd $GIT_ROOT &&" //:isort -- --check .
+bazel run --run_under="cd $GIT_ROOT &&" //:ruff -- .
+bazel run --run_under="cd $GIT_ROOT &&" //:flake8
+bazel run //:buildcheck

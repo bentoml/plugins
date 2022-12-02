@@ -1,9 +1,9 @@
-load("//:requirements.bzl", "requirement")
-load("//bazel:python_rules.bzl", "pytest_suite")
+load("@plugins//:requirements.bzl", "requirement")
+load("@com_github_bentoml_bentoml//rules/py:python.bzl", "py_test")
 
 package(default_visibility = ["//visibility:public"])
 
-pytest_suite(
+py_test(
     name = "package",
-    args = ["--cov=bentoml_plugins"],
+    starlark_requirement = requirement,
 )

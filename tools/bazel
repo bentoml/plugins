@@ -4,6 +4,7 @@ set -e
 
 # courtesy of https://github.com/grpc/grpc
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+GIT_ROOT="$(cd -- "${SCRIPT_DIR}/.." &>/dev/null && pwd)"
 
 # DISABLE_BAZEL_WRAPPER can be set to eliminate the wrapper logic
 if [ "${DISABLE_BAZEL_WRAPPER}" != "" ] && [ "${OVERRIDE_BAZEL_VERSION}" == "" ]; then
@@ -19,7 +20,7 @@ if [ "${DISABLE_BAZEL_WRAPPER}" != "" ] && [ "${OVERRIDE_BAZEL_VERSION}" == "" ]
 	fi
 fi
 
-VERSION=${OVERRIDE_BAZEL_VERSION:-$(<"$SCRIPT_DIR/../.bazelversion")}
+VERSION=${OVERRIDE_BAZEL_VERSION:-$(<"$GIT_ROOT/.bazelversion")}
 echo "INFO: Running bazel wrapper (see //tools/bazel for details), bazel version $VERSION will be used instead of system-wide bazel installation." >&2
 
 BASEURL_MIRROR="https://storage.googleapis.com/grpc-bazel-mirror/github.com/bazelbuild/bazel/releases/download"
@@ -59,5 +60,16 @@ if [ ! -x "${filename_abs}" ]; then
 	curl --fail -L --output "${filename_abs}" "${BASEURL_MIRROR}/${VERSION}/${filename}" || curl --fail -L --output "${filename_abs}" "${BASEURL}/${VERSION}/${filename}"
 	chmod a+x "${filename_abs}"
 fi
+
+! [ -f "$GIT_ROOT/requirements/dev-requirements.lock.txt" ] && touch "$GIT_ROOT/requirements/dev-requirements.lock.txt"
+
+if ! [ -f "$GIT_ROOT/.updatedeps.lock" ]; then
+	echo "INFO: Running updating depdencies and lock pip packages..." >&2
+	touch "$GIT_ROOT/.updatedeps.lock"
+	"${filename_abs}" run //:dev_requirements.update
+	"${filename_abs}" run //:vendor_requirements
+fi
+
+pushd "$GIT_ROOT" >/dev/null
 
 exec "${filename_abs}" "$@"

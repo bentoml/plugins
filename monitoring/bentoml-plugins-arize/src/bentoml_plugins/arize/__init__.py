@@ -1,3 +1,18 @@
+"""
+BentoML Monitoring Arize plugin.
+=======
+
+BentoML is the unified ML Model Serving framework. Data Scientists and ML Engineers use
+BentoML to:
+
+* Accelerate and standardize the process of taking ML models to production across teams
+* Build reliable, scalable, and high performance model serving systems
+* Provide a flexible MLOps platform that grows with your Data Science needs
+
+To learn more, visit BentoML documentation at: http://docs.bentoml.org
+To get involved with the development, find us on GitHub: https://github.com/bentoml
+And join us in the BentoML slack community: https://l.linklyhq.com/l/ktOh
+"""
 from __future__ import annotations
 
 import os
