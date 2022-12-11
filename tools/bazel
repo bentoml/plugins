@@ -63,9 +63,9 @@ fi
 
 ! [ -f "$GIT_ROOT/requirements/dev-requirements.lock.txt" ] && touch "$GIT_ROOT/requirements/dev-requirements.lock.txt"
 
-if ! [ -f "$GIT_ROOT/.updatedeps.lock" ]; then
-	echo "INFO: Running updating depdencies and lock pip packages..." >&2
-	touch "$GIT_ROOT/.updatedeps.lock"
+if ! [ -f "$GIT_ROOT/.bazel-requirements.lock" ]; then
+	echo "INFO: Locking pip packages..." >&2
+	touch "$GIT_ROOT/.bazel-requirements.lock"
 	"${filename_abs}" run //:dev_requirements.update
 fi
 
