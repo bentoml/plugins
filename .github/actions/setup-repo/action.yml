@@ -1,7 +1,5 @@
 name: Setup repo
-
 description: Setup repo with all features on CI
-
 inputs:
   python-version:
     description: "Python version"
@@ -11,44 +9,50 @@ inputs:
     description: "Which architecture to run on"
     required: true
     default: x64
-
 runs:
   using: composite
   steps:
+    - name: Fetch base reference.
+      shell: bash
+      run: git fetch origin $GITHUB_BASE_REF
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python-version }}
         architecture: ${{ inputs.architecture }}
-    - name: Setup bazel
+    - uses: bazelbuild/setup-bazelisk@v2
+    - name: Get cache key prefix
+      id: get-cache-key-prefix
       shell: bash
-      # NOTE: we have a wrapper that setup bazel locally, so we will run this
-      # to download the binary to the GitHub runner.
-      run: bazel --version
-    - uses: cachix/install-nix-action@v18
-      name: Setup Nix
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
+      run: echo "prefix=${{ runner.os }}-${{ inputs.python-version }}" >> $GITHUB_OUTPUT
     - name: Get pip cache dir
       id: pip-cache
       shell: bash
       run: echo "directory=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - name: Get cache key prefix
-      id: get-cache-key-prefix
-      shell: bash
-      run: |
-        echo "prefix=$ImageOS-$ImageVersion" >> $GITHUB_OUTPUT
+    - name: Bazel cache
+      id: bazel-cache
+      uses: actions/cache@v3
+      with:
+        key: ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel
+        path: |
+          ~/.cache/bazel
+          tools/
+        restore-keys: |
+          ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel-
     - name: Cache PyPI
       id: cache-pypi
       uses: actions/cache@v3.0.10
       with:
-        key: ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi-${{ hashFiles('requirements/*-requirements.txt') }}
+        key: ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi
         path: ${{ steps.pip-cache.outputs.directory }}
         restore-keys: |
-          ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi--
+          ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi-
+    - name: Run updating dependencies
+      shell: bash
+      run: bazel run //:pypi.update
     - name: Install development dependencies
       shell: bash
-      run: python -m pip install -r requirements/dev-requirements.lock.txt
-    - name: Install development dependencies
-      shell: bash
-      run: python -m pip install git+https://github.com/bentoml/bentoml.git@main
+      run: |
+        ./hack/update-deps
+        python -m pip install ruff
+        python -m pip install git+https://github.com/bentoml/bentoml.git@main

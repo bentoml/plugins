@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-addopts = ["-rfEX", "--cov-report=", "--cov-append"]
+addopts = ["-rfEX", "-vvv", "--capture=tee-sys"]
 python_files = ["test_*.py", "*_test.py"]
 testpaths = ["tests"]
 

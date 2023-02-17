@@ -367,7 +367,6 @@ class ArizeMonitor(MonitorBase[DataType]):
             self.model_type = _mapping_to_model_type[mapping]
 
         if self.model_version is None and self.model_id is None:
-
             self.model_id = f"{component_context.bento_name}:{self.name}"
             self.model_version = component_context.bento_version
 
