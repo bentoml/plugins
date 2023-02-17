@@ -61,7 +61,6 @@ alias(
 
 buildifier(
     name = "buildfmt",
-    exclude_patterns = ["./tools/gen_python_packages/**/*"],
 )
 
 buildifier_test(

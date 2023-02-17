@@ -6,8 +6,8 @@ load("@pypi//:requirements.bzl", "requirement")
 py_library(
     name = "{{ cookiecutter.__provider }}",
     srcs = ["__init__.py"],
+    imports = ["../.."],
     deps = [
         requirement("bentoml"),
     ],
-    imports = ["../.."]
 )

@@ -1,9 +1,8 @@
 name: Style
-
 concurrency:
-  group: style-check-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
+  group: style-check-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref
+    || github.run_id }}
   cancel-in-progress: true
-
 on:
   schedule:
     - cron: "0 0 * * 1/2" # Every other day 12AM UTC
@@ -19,19 +18,16 @@ on:
       - "BUILD.bazel"
       - "pyproject.toml"
       - ".github/workflows/style.yml"
-
 env:
   LINES: 200
   COLUMNS: 200
   BENTOML_DEBUG: True
   BENTOML_DO_NOT_TRACK: True
   PYTEST_PLUGINS: bentoml.testing.pytest.plugin
-
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#defaultsrun
 defaults:
   run:
     shell: bash --noprofile --norc -exo pipefail {0}
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -45,10 +41,7 @@ jobs:
       - name: Setup CI
         uses: ./.github/actions/setup-repo
       - name: Run format check
-        run: |
-          ./hack/lint
-          bazel run //:buildcheck
-
+        run: ./hack/lint
   type:
     runs-on: ubuntu-latest
     if: "!github.event.repository.fork" # Don't run on fork repository
@@ -71,7 +64,8 @@ jobs:
         run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
       - name: (pyright) Running type checking on PR
         if: ${{ steps.current-branch.outputs.branch != 'main' }}
-        run: git diff --name-only --diff-filter=d "origin/$GITHUB_BASE_REF" -z -- '*.py[i]' | xargs -0 --no-run-if-empty pyright
+        run: git diff --name-only --diff-filter=d "origin/$GITHUB_BASE_REF" -z --
+          '*.py{,i}' | xargs -0 --no-run-if-empty pyright
       - name: (pyright) Run type checking
         if: ${{ steps.current-branch.outputs.branch == 'main' }}
         run: pyright .

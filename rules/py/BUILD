@@ -2,7 +2,7 @@ load("@rules_python//python:defs.bzl", "py_binary")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@pypi//:requirements.bzl", "requirement")
 
-package(default_visibility = ["//:__subpackges__"])
+package(default_visibility = ["//:__subpackages__"])
 
 exports_files(["*.py"])
 
@@ -15,6 +15,7 @@ py_binary(
     name = "flake8",
     testonly = True,
     srcs = ["_flake8_wrapper.py"],
+    main = "_flake8_wrapper.py",
     visibility = ["//visibility:public"],
     deps = [
         requirement("flake8"),
