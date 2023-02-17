@@ -53,5 +53,6 @@ runs:
     - name: Install development dependencies
       shell: bash
       run: |
+        ./hack/update-deps
         python -m pip install ruff
         python -m pip install git+https://github.com/bentoml/bentoml.git@main
