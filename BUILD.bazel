@@ -1,11 +1,10 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_library")
-load("@com_github_bentoml_bentoml//rules:utils.bzl", "run_shell")
 load("@pypi//:requirements.bzl", "entry_point", "requirement")
+
+package(default_visibility = ["//visibility:public"])
 
 # export default pyproject.toml config
 filegroup(
@@ -17,10 +16,10 @@ filegroup(
 # lockfile based on the requirements.in.
 # Note that this rules will be used to distribute package with bazel.
 compile_pip_requirements(
-    name = "dev_requirements",
+    name = "pypi",
     extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
-    requirements_in = "//requirements:dev-requirements.txt",
-    requirements_txt = "//requirements:dev-requirements.lock.txt",
+    requirements_in = "//requirements:pypi.txt",
+    requirements_txt = "//requirements:bazel-pypi.lock.txt",
     visibility = ["//visibility:__pkg__"],
 )
 
@@ -41,10 +40,9 @@ alias(
     actual = "//rules/py:flake8",
 )
 
-run_shell(
-    name = "nixfmt",
-    content = ["find . -name '*.nix' -exec nixfmt {} \\; || (echo 'Failed to run nixfmt.'; exit 1)"],
-    data = ["@nixfmt//:bin/nixfmt"],
+alias(
+    name = "buildozer",
+    actual = "@com_github_bazelbuild_buildtools//buildozer",
 )
 
 buildifier(
@@ -61,8 +59,7 @@ buildifier_test(
     ]),
 )
 
-run_shell(
-    name = "nixcheck",
-    content = ["nixfmt --check **/*.nix || (echo 'Failed to run nixfmt check'; exit 1)"],
-    data = ["@nixfmt//:bin/nixfmt"],
+alias(
+    name = "pyright",
+    actual = "@npm//:node_modules/pyright/index.js",
 )

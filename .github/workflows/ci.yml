@@ -1,9 +1,8 @@
 name: CI
-
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref || github.run_id }}
+  group: ci-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref
+    || github.run_id }}
   cancel-in-progress: true
-
 on:
   schedule:
     - cron: "0 0 * * 1/2" # Every other day 12AM UTC
@@ -18,19 +17,16 @@ on:
       - "pyproject.toml"
       - ".github/workflows/ci.yml"
       - "monitoring/**"
-
 env:
   LINES: 200
   COLUMNS: 200
   BENTOML_DEBUG: True
   BENTOML_DO_NOT_TRACK: True
   PYTEST_PLUGINS: bentoml.testing.pytest.plugin
-
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#defaultsrun
 defaults:
   run:
     shell: bash --noprofile --norc -exo pipefail {0}
-
 jobs:
   monitoring-tests:
     runs-on: ubuntu-latest
@@ -42,7 +38,8 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.8", "3.9", "3.10"]
         packages: ["bentoml-plugins-arize"]
-    name: python${{ matrix.python-version }} tests for ${{ matrix.packages }} (${{ matrix.os }})
+    name: |
+      python${{ matrix.python-version }}-${{ matrix.packages }}-${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

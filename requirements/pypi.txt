@@ -1,0 +1,36 @@
+https://github.com/bentoml/bentoml/archive/6ef51e84f9667b3963bea74b172d1ada9b7ff92b.zip
+pytest
+pytest-cov
+pytest-xdist[psutil]
+pytest-asyncio
+yamllintj
+hatch
+cookiecutter
+black==23.01.0
+coverage[toml]==6.5.0
+isort
+ruff
+flake8
+flake8-pyproject
+flake8-quotes
+annotated-types
+build[virtualenv]
+setuptools-scm[toml]
+filetype
+pandas
+pyarrow
+pydantic<2
+Pillow
+fs-s3fs
+Pillow
+protobuf
+grpcio
+grpcio-health-checking
+opentelemetry-instrumentation-grpc==0.35b0
+grpcio-reflection
+grpcio-channelz
+opentelemetry-exporter-jaeger==1.14.0
+opentelemetry-exporter-zipkin==1.14.0
+opentelemetry-exporter-otlp==1.14.0
+# plugins dependencies
+-r external.txt
