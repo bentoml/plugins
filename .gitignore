@@ -134,3 +134,4 @@ bazel-*
 
 # ignore generated lock.
 *.lock.txt
+yarn.lock

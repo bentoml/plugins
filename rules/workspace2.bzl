@@ -26,6 +26,7 @@ def _bentoml_workspace():
         exports_directories_only = False,  # Required for ts_library
         package_json = "//:package.json",
         package_path = "/",
+        frozen_lockfile = True,
         yarn = "@yarn//:bin/yarn",
         yarn_lock = "//:yarn.lock",
     )

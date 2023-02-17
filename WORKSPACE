@@ -33,6 +33,16 @@ pip_parse(
     requirements_lock = "//requirements:bazel-pypi.lock.txt",
 )
 
-load("@pypi//:requirements.bzl", "install_deps")
+load("@pypi//:requirements.bzl", plugins_pypi_deps = "install_deps")
 
-install_deps()
+plugins_pypi_deps()
+
+pip_parse(
+    name = "external",
+    python_interpreter_target = interpreter,
+    requirements_lock = "//requirements:bazel-external.lock.txt",
+)
+
+load("@external//:requirements.bzl", external_pypi_deps = "install_deps")
+
+external_pypi_deps()

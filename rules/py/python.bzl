@@ -39,7 +39,7 @@ def py_test(name, args = [], data = [], **kwargs):
         },
         deps = [
             ":__test__",
-            requirement("bentoml"),
+            "@com_github_bentoml_bentoml//:sdk",
             requirement("pytest"),
             requirement("pytest-xdist"),
             requirement("pytest-asyncio"),

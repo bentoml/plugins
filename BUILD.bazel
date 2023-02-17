@@ -12,6 +12,12 @@ filegroup(
     srcs = ["pyproject.toml"],
 )
 
+exports_files([
+    "pyproject.toml",
+    "README.md",
+    "yarn.lock",
+])
+
 # This rule adds a convenient way to update the requirements.txt
 # lockfile based on the requirements.in.
 # Note that this rules will be used to distribute package with bazel.
@@ -20,6 +26,14 @@ compile_pip_requirements(
     extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
     requirements_in = "//requirements:pypi.txt",
     requirements_txt = "//requirements:bazel-pypi.lock.txt",
+    visibility = ["//visibility:__pkg__"],
+)
+
+compile_pip_requirements(
+    name = "external",
+    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
+    requirements_in = "//requirements:external.txt",
+    requirements_txt = "//requirements:bazel-external.lock.txt",
     visibility = ["//visibility:__pkg__"],
 )
 

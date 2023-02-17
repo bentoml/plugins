@@ -62,6 +62,8 @@ if [ ! -x "${filename_abs}" ]; then
 fi
 
 ! [ -f "$GIT_ROOT/requirements/bazel-pypi.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-pypi.lock.txt"
+! [ -f "$GIT_ROOT/requirements/bazel-external.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-external.lock.txt"
+[ ! -f "$GIT_ROOT/yarn.lock" ] && touch "$GIT_ROOT/yarn.lock"
 
 pushd "$GIT_ROOT" > /dev/null
 

@@ -10,3 +10,4 @@ bazel run --run_under="cd $GIT_ROOT &&" //:black -- .
 bazel run --run_under="cd $GIT_ROOT &&" //:black -- --pyi "$GIT_ROOT/typings"
 bazel run --run_under="cd $GIT_ROOT &&" //:isort -- .
 bazel run //:buildfmt
+ruff --fix .
