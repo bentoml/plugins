@@ -1,3 +1,7 @@
+"""
+Use this to setup correct dependencies in any repository.
+"""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
@@ -9,11 +13,13 @@ PROTOBUF_VERSION = "21.11"
 PROTOBUF_SHA256 = "b1d6dd2cbb5d87e17af41cadb720322ce7e13af826268707bd8db47e5654770b"
 
 def internal_deps():
+    """Loading internal dependencies from local workspace."""
     maybe(
         git_repository,
         name = "com_github_bentoml_bentoml",
         remote = "https://github.com/aarnphm/bentoml.git",
-        branch = "bazel/general-overhaul",
+        commit = "3dc276bb94b5e98f6b80e727c88a6b7bddc8397f",
+        shallow_since = "1677313470 -0800",
     )
 
     maybe(
