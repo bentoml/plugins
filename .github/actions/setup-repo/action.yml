@@ -47,9 +47,6 @@ runs:
         path: ${{ steps.pip-cache.outputs.directory }}
         restore-keys: |
           ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi-
-    - name: Run updating dependencies
-      shell: bash
-      run: bazel run //:pypi.update
     - name: Install development dependencies
       shell: bash
       run: |
