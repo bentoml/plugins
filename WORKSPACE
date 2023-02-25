@@ -33,7 +33,7 @@ pip_parse(
     requirements_lock = "//requirements:bazel-pypi.lock.txt",
 )
 
-load("@pypi//:requirements.bzl", plugins_pypi_deps = "install_deps")
+load("//rules/py/vendorred:pypi.bzl", plugins_pypi_deps = "install_deps")
 
 plugins_pypi_deps()
 
@@ -43,6 +43,6 @@ pip_parse(
     requirements_lock = "//requirements:bazel-external.lock.txt",
 )
 
-load("@external//:requirements.bzl", external_pypi_deps = "install_deps")
+load("//rules/py/vendorred:external.bzl", external_pypi_deps = "install_deps")
 
 external_pypi_deps()

@@ -4,7 +4,7 @@ All python-related macros and ruleset
 
 load("//rules/private:py_pytest_main.bzl", _py_pytest_main = "py_pytest_main")
 load("@rules_python//python:defs.bzl", _py_test = "py_test")
-load("@pypi//:requirements.bzl", "requirement")
+load("//rules/py/vendorred:pypi.bzl", "requirement")
 
 def py_test(name, args = [], data = [], **kwargs):
     """A py_test macro that use pytest + rules_python's 'py_test' to run BentoML tests.

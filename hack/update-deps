@@ -7,5 +7,7 @@ GIT_ROOT=$(git rev-parse --show-toplevel)
 cd "$GIT_ROOT" || exit 1
 
 # Run all rules involving *-requirements.update
-bazel run //:pypi.update
-bazel run //:external.update
+bazel run //requirements:pypi.update
+bazel run //:vendor-pypi
+bazel run //requirements:external.update
+bazel run //:vendor-external

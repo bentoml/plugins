@@ -18,8 +18,8 @@ def internal_deps():
         git_repository,
         name = "com_github_bentoml_bentoml",
         remote = "https://github.com/aarnphm/bentoml.git",
-        commit = "3dc276bb94b5e98f6b80e727c88a6b7bddc8397f",
-        shallow_since = "1677313470 -0800",
+        commit = "c0d6c367d0772d8ffdfbecfa00ec676058ef0047",
+        shallow_since = "1677314454 -0800",
     )
 
     maybe(

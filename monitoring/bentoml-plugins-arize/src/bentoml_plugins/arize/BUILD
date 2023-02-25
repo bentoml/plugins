@@ -1,6 +1,6 @@
 load("@rules_python//python:defs.bzl", "py_library")
-load("@pypi//:requirements.bzl", plugins_requirement = "requirement")
-load("@external//:requirements.bzl", external_requirement = "requirement")
+load("//rules/py/vendorred:pypi.bzl", plugins_requirement = "requirement")
+load("//rules/py/vendorred:external.bzl", external_requirement = "requirement")
 
 package(default_visibility = ["//visibility:public"])
 

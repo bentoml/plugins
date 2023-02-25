@@ -1,5 +1,5 @@
 load("@rules_python//python:defs.bzl", "py_binary")
-load("@pypi//:requirements.bzl", "requirement")
+load("//rules/py/vendorred:pypi.bzl", "requirement")
 
 py_binary(
     name = "bootstrap",

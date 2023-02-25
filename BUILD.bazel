@@ -1,8 +1,6 @@
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
-load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
-load("@rules_python//python:pip.bzl", "compile_pip_requirements")
-load("@rules_python//python:defs.bzl", "py_library")
-load("@pypi//:requirements.bzl", "entry_point", "requirement")
+load("//rules/py/vendorred:pypi.bzl", "entry_point")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -18,25 +16,6 @@ exports_files([
     "yarn.lock",
 ])
 
-# This rule adds a convenient way to update the requirements.txt
-# lockfile based on the requirements.in.
-# Note that this rules will be used to distribute package with bazel.
-compile_pip_requirements(
-    name = "pypi",
-    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
-    requirements_in = "//requirements:pypi.txt",
-    requirements_txt = "//requirements:bazel-pypi.lock.txt",
-    visibility = ["//visibility:__pkg__"],
-)
-
-compile_pip_requirements(
-    name = "external",
-    extra_args = ["--allow-unsafe"],  # We need to allow unsafe to lock pip version
-    requirements_in = "//requirements:external.txt",
-    requirements_txt = "//requirements:bazel-external.lock.txt",
-    visibility = ["//visibility:__pkg__"],
-)
-
 [
     alias(
         name = tool,
@@ -48,6 +27,60 @@ compile_pip_requirements(
         "ruff",
     ]
 ]
+
+genrule(
+    name = "make-pypi-requirements",
+    srcs = ["@pypi//:requirements.bzl"],
+    outs = ["pypi.clean.bzl"],
+    cmd = " | ".join([
+        "cat $<",
+        "cat >$@",
+    ]),
+)
+
+write_file(
+    name = "gen-pypi-starlark",
+    out = "update-pypi.sh",
+    content = [
+        # This depends on bash, which is not going to work on Windows.
+        "#!/usr/bin/env bash",
+        "cd $BUILD_WORKSPACE_DIRECTORY",
+        "cp -fv bazel-bin/pypi.clean.bzl rules/py/vendorred/pypi.bzl",
+    ],
+)
+
+sh_binary(
+    name = "vendor-pypi",
+    srcs = ["update-pypi.sh"],
+    data = [":make-pypi-requirements"],
+)
+
+genrule(
+    name = "make-external-requirements",
+    srcs = ["@external//:requirements.bzl"],
+    outs = ["external.clean.bzl"],
+    cmd = " | ".join([
+        "cat $<",
+        "cat >$@",
+    ]),
+)
+
+write_file(
+    name = "gen-external-starlark",
+    out = "update-external.sh",
+    content = [
+        # This depends on bash, which is not going to work on Windows.
+        "#!/usr/bin/env bash",
+        "cd $BUILD_WORKSPACE_DIRECTORY",
+        "cp -fv bazel-bin/external.clean.bzl rules/py/vendorred/external.bzl",
+    ],
+)
+
+sh_binary(
+    name = "vendor-external",
+    srcs = ["update-external.sh"],
+    data = [":make-external-requirements"],
+)
 
 alias(
     name = "flake8",
