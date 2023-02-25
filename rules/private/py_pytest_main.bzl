@@ -32,7 +32,7 @@ _py_pytest_main = rule(
         ),
         "template": attr.label(
             allow_single_file = True,
-            default = Label("//bazel/private:pytest.py.tmpl"),
+            default = Label("//rules/private:pytest.py.tmpl"),
         ),
     },
 )
