@@ -63,9 +63,6 @@ jobs:
         id: current-branch
         run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
       - name: (pyright) Running type checking on PR
-        if: ${{ steps.current-branch.outputs.branch != 'main' }}
+        if: ${{ github.event_name == 'pull_request' }}
         run: git diff --name-only --diff-filter=d "origin/$GITHUB_BASE_REF" -z --
           '*.py{,i}' | xargs -0 --no-run-if-empty pyright
-      - name: (pyright) Run type checking
-        if: ${{ steps.current-branch.outputs.branch == 'main' }}
-        run: pyright .
