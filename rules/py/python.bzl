@@ -1,5 +1,9 @@
+"""
+All python-related macros and ruleset
+"""
+
+load("//rules/private:py_pytest_main.bzl", _py_pytest_main = "py_pytest_main")
 load("@rules_python//python:defs.bzl", _py_test = "py_test")
-load("@aspect_rules_py//py:defs.bzl", _pytest_main = "py_pytest_main")
 load("@pypi//:requirements.bzl", "requirement")
 
 def py_test(name, args = [], data = [], **kwargs):
@@ -18,13 +22,13 @@ def py_test(name, args = [], data = [], **kwargs):
 
     # __test__ is a special attribute from py_pytest_main
     if "__test__" not in native.existing_rules():
-        _pytest_main(name = "__test__")
+        _py_pytest_main(name = "__test__")
 
     srcs = kwargs.pop("srcs", [])
     deps = kwargs.pop("deps", [])
 
     if not srcs:
-        srcs += ["test_{}.py".format(name)]
+        srcs.append("test_{}.py".format(name))
 
     _py_test(
         name = name,

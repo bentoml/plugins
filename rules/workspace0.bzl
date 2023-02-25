@@ -16,7 +16,6 @@ load("@rules_proto_grpc//js:repositories.bzl", rules_proto_grpc_js_repos = "js_r
 
 # load go tooling, buf
 load("@rules_buf//buf:repositories.bzl", "rules_buf_dependencies", "rules_buf_toolchains")
-load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 
 # NOTE: Java and Kotlin setup.
 load("@rules_jvm_external//:defs.bzl", "maven_install")
@@ -70,8 +69,6 @@ def _bentoml_workspace():
     rules_buf_dependencies()
 
     rules_buf_toolchains(version = "v1.9.0")
-
-    aspect_bazel_lib_dependencies()
 
     py_repositories()
 

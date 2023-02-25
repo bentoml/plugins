@@ -130,22 +130,6 @@ def internal_deps():
         url = "https://github.com/bazelbuild/rules_python/releases/download/0.18.1/rules_python-0.18.1.tar.gz",
     )
 
-    maybe(
-        git_repository,
-        name = "aspect_rules_py",
-        commit = "8a701289a65d6970f72b7efbd0078bf24ad9aa38",
-        remote = "https://github.com/aspect-build/rules_py.git",
-        shallow_since = "1667933877 +0000",
-    )
-
-    maybe(
-        http_archive,
-        name = "aspect_bazel_lib",
-        sha256 = "3534a27621725fbbf1d3e53daa0c1dda055a2732d9031b8c579f917d7347b6c4",
-        strip_prefix = "bazel-lib-1.16.1",
-        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.16.1.tar.gz",
-    )
-
     # io_grpc_grpc_java is for java_grpc_library and related dependencies.
     # Using commit 0cda133c52ed937f9b0a19bcbfc36bf2892c7aa8
     maybe(
