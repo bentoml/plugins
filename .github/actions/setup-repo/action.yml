@@ -35,7 +35,6 @@ runs:
       with:
         key: ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel
         path: |
-          ~/.cache/bazel
           tools/
         restore-keys: |
           ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel-
@@ -49,4 +48,6 @@ runs:
           ${{ steps.get-cache-key-prefix.outputs.prefix }}-pypi-
     - name: Install development dependencies
       shell: bash
-      run: ./hack/update-deps
+      run: |
+        ./hack/update-deps
+        pip install ruff
