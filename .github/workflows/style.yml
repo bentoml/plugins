@@ -53,4 +53,5 @@ jobs:
       - name: Setup CI
         uses: ./.github/actions/setup-repo
       - name: Run format check
+        if: ${{ github.event_name == 'pull_request' }}
         run: ./hack/type
