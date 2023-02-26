@@ -64,6 +64,9 @@ def py_test(name, args = [], data = [], **kwargs):
         },
         args = args,
         data = ["//:pyproject"] + data,
-        deps = ["@com_github_bentoml_bentoml//:sdk"] + deps,
+        deps = [
+            "@com_github_bentoml_bentoml//:sdk",
+            requirement("pytest-cov"),
+        ] + deps,
         **kwargs
     )

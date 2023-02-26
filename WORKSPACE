@@ -21,6 +21,7 @@ load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 python_register_toolchains(
     name = "python3_10",
     python_version = "3.10",
+    register_coverage_tool = True,
 )
 
 load("@python3_10//:defs.bzl", "interpreter")

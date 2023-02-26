@@ -19,3 +19,5 @@ test --test_env=PYTEST_PLUGINS=bentoml.testing.pytest.plugin
 # Dynamic link cause issues like: `dyld: malformed mach-o: load commands size (59272) > 32768`
 # https://github.com/bazelbuild/bazel/issues/9190
 build:macos --dynamic_mode=off
+
+coverage --java_runtime_version=remotejdk_11
