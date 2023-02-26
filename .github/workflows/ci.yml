@@ -1,7 +1,6 @@
 name: CI
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref
-    || github.run_id }}
+  group: ci-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 on:
   schedule:

@@ -121,3 +121,67 @@ def test_mapping(init_context: None) -> None:
     monitor.log(1, name="pred2", role="prediction", data_type="numerical")
     monitor.stop_record()
     assert monitor.model_type == ModelTypes.NUMERIC
+
+
+def test_init_from_env(monkeypatch: MonkeyPatch) -> None:
+    from bentoml_plugins.arize import ArizeMonitor
+
+    with monkeypatch.context() as m:
+        m.setenv("ARIZE_API_KEY", MY_API_KEY)
+        m.setenv("ARIZE_SPACE_KEY", MY_SPACE_KEY)
+        monitor = ArizeMonitor("my_model_1", uri=URI)
+        assert monitor.space_key == MY_SPACE_KEY
+        assert monitor.api_key == MY_API_KEY
+
+
+def test_export_schema_warning(caplog: pytest.LogCaptureFixture) -> None:
+    from bentoml_plugins.arize import ArizeMonitor
+
+    monitor = ArizeMonitor(
+        "mon",
+        MY_API_KEY,
+        MY_SPACE_KEY,
+        URI,
+        model_type=ModelTypes.BINARY_CLASSIFICATION,
+    )
+    with caplog.at_level("WARNING"):
+        monitor.export_schema(
+            {
+                "pred": {
+                    "name": "pred",
+                    "role": "prediction",
+                    "type": "numerical_sequence",
+                }
+            }
+        )
+    assert "does not support numerical_sequence" in caplog.text
+    caplog.clear()
+
+    with caplog.at_level("WARNING"):
+        monitor.export_schema(
+            {
+                "pred": {
+                    "name": "pred",
+                    "role": "target",
+                    "type": "numerical_sequence",
+                }
+            }
+        )
+    assert "does not support numerical_sequence" in caplog.text
+    caplog.clear()
+
+    with caplog.at_level("WARNING"):
+        monitor.export_schema(
+            {
+                "pred": {
+                    "name": "pred",
+                    "role": "not_suppported",
+                    "type": "not_suppported",
+                }
+            }
+        )
+    assert (
+        "does not support column pred with role not_suppported and type not_suppported"
+        in caplog.text
+    )
+    caplog.clear()

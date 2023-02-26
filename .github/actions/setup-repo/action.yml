@@ -35,7 +35,6 @@ runs:
       with:
         key: ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel
         path: |
-          ~/.cache/bazel
           tools/
         restore-keys: |
           ${{ steps.get-cache-key-prefix.outputs.prefix }}-bazel-
@@ -51,5 +50,4 @@ runs:
       shell: bash
       run: |
         ./hack/update-deps
-        python -m pip install ruff
-        python -m pip install git+https://github.com/bentoml/bentoml.git@main
+        pip install -r requirements/pypi.txt -r requirements/external.txt

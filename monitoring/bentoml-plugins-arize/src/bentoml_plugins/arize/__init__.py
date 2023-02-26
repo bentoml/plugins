@@ -95,8 +95,7 @@ def _stat_fields(schema: t.Iterable[dict[str, str]]) -> _FieldStats:
             )
         else:
             logger.warning(
-                "Arize Monitor does not support column %s with role %s and type %s."
-                "Ignoring column",
+                "Arize Monitor does not support column %s with role %s and type %s. Ignoring column",
                 column["name"],
                 column["role"],
                 column["type"],

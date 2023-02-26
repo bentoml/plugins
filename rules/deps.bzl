@@ -109,10 +109,10 @@ def internal_deps():
     maybe(
         http_archive,
         name = "com_github_bazelbuild_buildtools",
-        sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
-        strip_prefix = "buildtools-4.2.2",
+        sha256 = "ca524d4df8c91838b9e80543832cf54d945e8045f6a2b9db1a1d02eec20e8b8c",
+        strip_prefix = "buildtools-6.0.1",
         urls = [
-            "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
+            "https://github.com/bazelbuild/buildtools/archive/refs/tags/6.0.1.tar.gz",
         ],
     )
 
@@ -157,8 +157,8 @@ def internal_deps():
     maybe(
         http_archive,
         name = "io_bazel_rules_kotlin",
-        sha256 = "a57591404423a52bd6b18ebba7979e8cd2243534736c5c94d35c89718ea38f94",
-        urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v1.6.0/rules_kotlin_release.tgz"],
+        sha256 = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3",
+        urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v1.7.1/rules_kotlin_release.tgz"],
     )
     maybe(
         http_archive,
