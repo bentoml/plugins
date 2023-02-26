@@ -1,7 +1,6 @@
 name: Style
 concurrency:
-  group: style-check-${{ github.event.pull_request.number || github.sha }}-${{ github.head_ref
-    || github.run_id }}
+  group: style-check-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 on:
   schedule:
@@ -53,16 +52,5 @@ jobs:
           fetch-depth: 0 # fetch all tags and branches
       - name: Setup CI
         uses: ./.github/actions/setup-repo
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 17
-      - name: Install pyright
-        run: npm install -g npm@^7 pyright
-      - name: Get current branch.
-        id: current-branch
-        run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
-      - name: (pyright) Running type checking on PR
-        if: ${{ github.event_name == 'pull_request' }}
-        run: git diff --name-only --diff-filter=d "origin/$GITHUB_BASE_REF" -z --
-          '*.py{,i}' | xargs -0 --no-run-if-empty pyright
+      - name: Run format check
+        run: ./hack/type
