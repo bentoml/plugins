@@ -34,6 +34,7 @@ exclude = '''
     | \.tox
     | \.venv
     | \.build
+    | \node_modules
     | venv
     | _build
     | build
@@ -62,8 +63,8 @@ exclude = [
   "venv",
   "**/tests",
   "typings",
+  "node_modules",
 ]
-venv = ["venv"]
 typeCheckingMode = "strict"
 analysis.useLibraryCodeForTypes = true
 enableTypeIgnoreComments = true
