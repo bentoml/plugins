@@ -50,4 +50,4 @@ runs:
       shell: bash
       run: |
         ./hack/update-deps
-        pip install ruff
+        pip install -r requirements/pypi.txt -r requirements/external.txt
