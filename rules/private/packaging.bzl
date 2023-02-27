@@ -25,10 +25,13 @@ def _path_inside_wheel(f, using_src_layout = False, basedir = ""):
         short_path = short_path[4:]
 
     # Support for C extensions.
-    if f.extension == "so" and basedir:
-        # C extension. Move it to the root of the zip file.
-        # TODO: this is wrong on Windows
-        short_path = basedir + "/" + f.basename
+    if f.extension == "so":
+        if basedir:
+            # C extension. Move it to the root of the zip file.
+            # TODO: this is wrong on Windows
+            short_path = basedir + "/" + f.basename
+        else:
+            print("C extension {} found, but no basedir specified".format(f.short_path))
 
     return short_path
 
