@@ -8,7 +8,7 @@ exports_files(["*.py"])
 
 [
     bzl_library(
-        name = lib,
+        name = "{}.bzl".format(lib),
         srcs = ["{}.bzl".format(lib)],
     )
     for lib in [
