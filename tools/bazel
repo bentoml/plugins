@@ -6,6 +6,10 @@ set -e
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 GIT_ROOT="$(cd -- "${SCRIPT_DIR}/.." &> /dev/null && pwd)"
 
+! [ -f "$GIT_ROOT/requirements/bazel-pypi.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-pypi.lock.txt"
+! [ -f "$GIT_ROOT/requirements/bazel-external.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-external.lock.txt"
+[ ! -f "$GIT_ROOT/yarn.lock" ] && touch "$GIT_ROOT/yarn.lock"
+
 # DISABLE_BAZEL_WRAPPER can be set to eliminate the wrapper logic
 if [ "${DISABLE_BAZEL_WRAPPER}" != "" ] && [ "${OVERRIDE_BAZEL_VERSION}" == "" ]; then
     if [ "${BAZEL_REAL}" != "" ]; then
@@ -60,10 +64,6 @@ if [ ! -x "${filename_abs}" ]; then
     curl --fail -L --output "${filename_abs}" "${BASEURL_MIRROR}/${VERSION}/${filename}" || curl --fail -L --output "${filename_abs}" "${BASEURL}/${VERSION}/${filename}"
     chmod a+x "${filename_abs}"
 fi
-
-! [ -f "$GIT_ROOT/requirements/bazel-pypi.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-pypi.lock.txt"
-! [ -f "$GIT_ROOT/requirements/bazel-external.lock.txt" ] && touch "$GIT_ROOT/requirements/bazel-external.lock.txt"
-[ ! -f "$GIT_ROOT/yarn.lock" ] && touch "$GIT_ROOT/yarn.lock"
 
 pushd "$GIT_ROOT" > /dev/null
 

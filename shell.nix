@@ -12,13 +12,17 @@ let
     [
       (python310.withPackages (ps: with ps; [ pynvim pip virtualenv ipython ]))
 
+      # Tooling
+      git
+      bazel_6
+      nixfmt
+      treefmt
+      zsh
+
       # Without this, we see a whole bunch of warnings about LANG, LC_ALL and locales in general.
       # The solution is from: https://github.com/NixOS/nix/issues/318#issuecomment-52986702
       glibcLocales
       coreutils
-      git
-      bazel_5
-      nixfmt
     ] ++ lib.optional stdenv.isLinux inotify-tools
     ++ lib.optionals stdenv.isDarwin
     (with darwin.apple_sdk.frameworks; [ CoreFoundation CoreServices ]);
@@ -28,27 +32,25 @@ let
     paths = packages;
   };
 
-in stdenv.mkDerivation {
+in stdenv.mkDerivation rec {
   name = "ecosystem-environment";
 
   buildInputs = [ env ];
 
   shellHook = ''
     if [[ ! -d venv ]]; then
-      pip freeze | grep "virtualenv" &> /dev/null || pip install virtualenv
       python -m virtualenv venv --download
       source venv/bin/activate
     else
       source venv/bin/activate
     fi
-    pip install -r ./requirements/dev-requirements.lock.txt -vv || exit 1
-  '';
-  enableParallelBuilding = true;
 
+    ./hack/update-deps
+    pip install -r ./requirements/bazel-pypi.lock.txt -r ./requirements/bazel-external.lock.txt
+  '';
+
+  # NOTE: Using bazel from nix, which disable the wrapper script
+  DISABLE_BAZEL_WRAPPER = true;
   LOCALE_ARCHIVE =
     if stdenv.isLinux then "${glibcLocales}/lib/locale/locale-archive" else "";
-
-  nobuild = ''
-    echo Do not run this derivation with nix-build, it can only be used with nix-shell
-  '';
 }
