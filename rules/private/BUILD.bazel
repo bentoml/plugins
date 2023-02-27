@@ -8,6 +8,12 @@ exports_files(
 bzl_library(
     name = "py_pytest_main",
     srcs = ["py_pytest_main.bzl"],
-    visibility = ["//bazel:__subpackages__"],
+    visibility = ["//rules:__subpackages__"],
     deps = ["@rules_python//python:defs"],
+)
+
+bzl_library(
+    name = "packaging",
+    srcs = ["packaging.bzl"],
+    visibility = ["//rules:__subpackages__"],
 )

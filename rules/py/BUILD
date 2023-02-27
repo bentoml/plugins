@@ -6,10 +6,16 @@ package(default_visibility = ["//:__subpackages__"])
 
 exports_files(["*.py"])
 
-bzl_library(
-    name = "python.bzl",
-    srcs = ["python.bzl"],
-)
+[
+    bzl_library(
+        name = lib,
+        srcs = ["{}.bzl".format(lib)],
+    )
+    for lib in [
+        "python",
+        "packaging",
+    ]
+]
 
 py_binary(
     name = "flake8",
