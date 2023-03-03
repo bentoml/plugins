@@ -171,6 +171,12 @@ def internal_deps():
     # rules_swift and rules_apple
     maybe(
         http_archive,
+        name = "build_bazel_rules_apple",
+        sha256 = "3e2c7ae0ddd181c4053b6491dad1d01ae29011bc322ca87eea45957c76d3a0c3",
+        url = "https://github.com/bazelbuild/rules_apple/releases/download/2.1.0/rules_apple.2.1.0.tar.gz",
+    )
+    maybe(
+        http_archive,
         name = "build_bazel_rules_swift",
         sha256 = "51efdaf85e04e51174de76ef563f255451d5a5cd24c61ad902feeadafc7046d9",
         url = "https://github.com/bazelbuild/rules_swift/releases/download/1.2.0/rules_swift.1.2.0.tar.gz",

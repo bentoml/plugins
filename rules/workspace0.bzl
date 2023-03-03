@@ -30,6 +30,10 @@ load(
 
 # NOTE: rules_swift and rules_apple
 load(
+    "@build_bazel_rules_apple//apple:repositories.bzl",
+    "apple_rules_dependencies",
+)
+load(
     "@build_bazel_apple_support//lib:repositories.bzl",
     "apple_support_dependencies",
 )
@@ -98,6 +102,8 @@ def _bentoml_workspace():
     )
 
     rules_proto_grpc_js_repos()
+
+    apple_rules_dependencies()
 
     apple_support_dependencies()
 
