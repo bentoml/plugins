@@ -12,14 +12,13 @@ GRPC_SHA256 = "b55696fb249669744de3e71acc54a9382bea0dce7cd5ba379b356b12b82d4229"
 PROTOBUF_VERSION = "21.11"
 PROTOBUF_SHA256 = "b1d6dd2cbb5d87e17af41cadb720322ce7e13af826268707bd8db47e5654770b"
 
-def internal_deps():
+def plugins_dependencies():
     """Loading internal dependencies from local workspace."""
     maybe(
         git_repository,
         name = "com_github_bentoml_bentoml",
         remote = "https://github.com/aarnphm/bentoml.git",
-        commit = "c0d6c367d0772d8ffdfbecfa00ec676058ef0047",
-        shallow_since = "1677314454 -0800",
+        branch = "bazel/general-overhaul",
     )
 
     maybe(

@@ -1,6 +1,6 @@
 workspace(name = "com_github_bentoml_plugins")
 
-load("//rules:deps.bzl", "internal_deps")
+load("//rules:deps.bzl", internal_deps = "plugins_dependencies")
 
 internal_deps()
 

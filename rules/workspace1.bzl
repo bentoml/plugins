@@ -7,6 +7,7 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 load("@maven//:compat.bzl", "compat_repositories")
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
+load("@rules_python//python/pip_install:repositories.bzl", "pip_install_dependencies")
 
 def _bentoml_workspace():
     protobuf_deps()
@@ -22,5 +23,6 @@ def _bentoml_workspace():
     kt_register_toolchains()
 
     build_bazel_rules_nodejs_dependencies()
+    pip_install_dependencies()
 
 workspace1 = _bentoml_workspace
