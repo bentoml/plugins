@@ -1,6 +1,6 @@
 """
 BentoML Monitoring Arize plugin.
-=======
+================================
 
 BentoML is the unified ML Model Serving framework. Data Scientists and ML Engineers use
 BentoML to:
@@ -23,7 +23,6 @@ import functools
 import collections
 from enum import Enum
 from enum import unique
-from typing import TYPE_CHECKING
 
 import attr
 from arize.api import Client
@@ -216,7 +215,7 @@ _mapping_to_model_type = {
 }
 
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     MapData: t.TypeAlias = tuple[
         DataType | tuple[DataType, DataType] | None,
         DataType | tuple[DataType, DataType] | None,
