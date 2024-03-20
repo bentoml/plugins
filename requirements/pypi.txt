@@ -16,7 +16,7 @@ annotated-types
 build[virtualenv]
 setuptools-scm[toml]
 # bentoml dependencies
-aiohttp==3.9.0
+aiohttp==3.9.2
 attrs==22.1.0
 cattrs==22.2.0
 circus==0.17.1
