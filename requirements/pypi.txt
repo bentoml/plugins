@@ -5,7 +5,7 @@ pytest-asyncio
 yamllint
 hatch
 cookiecutter
-black==23.01.0
+black==24.3.0
 coverage[toml]==6.5.0
 isort
 ruff
